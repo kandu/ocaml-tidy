@@ -1,0 +1,7 @@
+name= "htmlParser"
+version = "0.1"
+description = "HTML parser and reformatter"
+requires="core_kernel"
+archive(byte)= "tidy5.cma"
+archive(native)= "tidy5.cmxa"
+
