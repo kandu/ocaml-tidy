@@ -1,4 +1,4 @@
-name= "htmlParser"
+name= "tidy5"
 version = "0.1"
 description = "HTML parser and reformatter"
 requires="core_kernel"
