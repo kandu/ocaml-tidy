@@ -52,6 +52,8 @@ val isHeader : node -> bool
 val hasText : node -> bool
 val getText : node -> string
 
+val extractText : node -> string list
+
 module Tree :
   sig
     type index = {
