@@ -167,6 +167,15 @@ let isHeader {doc; node}= Stub.nodeIsHeader node
 let hasText {doc; node}= Stub.nodeHasText doc node
 let getText {doc; node}= Stub.nodeGetText doc node
 
+let rec extractText node=
+  match getType node with
+  | Node_Text-> [getText node]
+  | Node_Start | Node_End | Node_StartEnd->
+    getChildren node
+      |> List.map ~f:extractText
+      |> List.concat
+  | _-> []
+
 module Tree = struct
   type index= {
     byType: node list String.Map.t;
