@@ -5,7 +5,7 @@ CC= gcc
 lib: tidy5.cma tidy5.cmxa
 
 stub.o: stub.c
-	$(CC) -Wall -fPIC -I /usr/local/include/ -I `ocamlc -where` -c -o $@ $<
+	$(CC) -Wall -fPIC -I `ocamlc -where` -c -o $@ $<
 
 tidy5.cma tidy5.cmxa: tidy5.ml stub.o
 	ocamlfind ocamlmklib -package core_kernel -ltidy5 -o tidy5 -oc tidy5_stubs $^
