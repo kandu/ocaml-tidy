@@ -168,6 +168,321 @@ type tagId=
   | Tag_VIDEO
   | N_TIDY_TAGS
 
+type attrId=
+  | Attr_UNKNOWN (* UNKNOWN=. *)
+  | Attr_ABBR (* ABBR=. *)
+  | Attr_ACCEPT (* ACCEPT=. *)
+  | Attr_ACCEPT_CHARSET (* ACCEPT_CHARSET=. *)
+  | Attr_ACCESSKEY (* ACCESSKEY=. *)
+  | Attr_ACTION (* ACTION=. *)
+  | Attr_ADD_DATE (* ADD_DATE=. *)
+  | Attr_ALIGN (* ALIGN=. *)
+  | Attr_ALINK (* ALINK=. *)
+  | Attr_ALT (* ALT=. *)
+  | Attr_ARCHIVE (* ARCHIVE=. *)
+  | Attr_AXIS (* AXIS=. *)
+  | Attr_BACKGROUND (* BACKGROUND=. *)
+  | Attr_BGCOLOR (* BGCOLOR=. *)
+  | Attr_BGPROPERTIES (* BGPROPERTIES=. *)
+  | Attr_BORDER (* BORDER=. *)
+  | Attr_BORDERCOLOR (* BORDERCOLOR=. *)
+  | Attr_BOTTOMMARGIN (* BOTTOMMARGIN=. *)
+  | Attr_CELLPADDING (* CELLPADDING=. *)
+  | Attr_CELLSPACING (* CELLSPACING=. *)
+  | Attr_CHAR (* CHAR=. *)
+  | Attr_CHAROFF (* CHAROFF=. *)
+  | Attr_CHARSET (* CHARSET=. *)
+  | Attr_CHECKED (* CHECKED=. *)
+  | Attr_CITE (* CITE=. *)
+  | Attr_CLASS (* CLASS=. *)
+  | Attr_CLASSID (* CLASSID=. *)
+  | Attr_CLEAR (* CLEAR=. *)
+  | Attr_CODE (* CODE=. *)
+  | Attr_CODEBASE (* CODEBASE=. *)
+  | Attr_CODETYPE (* CODETYPE=. *)
+  | Attr_COLOR (* COLOR=. *)
+  | Attr_COLS (* COLS=. *)
+  | Attr_COLSPAN (* COLSPAN=. *)
+  | Attr_COMPACT (* COMPACT=. *)
+  | Attr_CONTENT (* CONTENT=. *)
+  | Attr_COORDS (* COORDS=. *)
+  | Attr_DATA (* DATA=. *)
+  | Attr_DATAFLD (* DATAFLD=. *)
+  | Attr_DATAFORMATAS (* DATAFORMATAS=. *)
+  | Attr_DATAPAGESIZE (* DATAPAGESIZE=. *)
+  | Attr_DATASRC (* DATASRC=. *)
+  | Attr_DATETIME (* DATETIME=. *)
+  | Attr_DECLARE (* DECLARE=. *)
+  | Attr_DEFER (* DEFER=. *)
+  | Attr_DIR (* DIR=. *)
+  | Attr_DISABLED (* DISABLED=. *)
+  | Attr_ENCODING (* ENCODING=. *)
+  | Attr_ENCTYPE (* ENCTYPE=. *)
+  | Attr_FACE (* FACE=. *)
+  | Attr_FOR (* FOR=. *)
+  | Attr_FRAME (* FRAME=. *)
+  | Attr_FRAMEBORDER (* FRAMEBORDER=. *)
+  | Attr_FRAMESPACING (* FRAMESPACING=. *)
+  | Attr_GRIDX (* GRIDX=. *)
+  | Attr_GRIDY (* GRIDY=. *)
+  | Attr_HEADERS (* HEADERS=. *)
+  | Attr_HEIGHT (* HEIGHT=. *)
+  | Attr_HREF (* HREF=. *)
+  | Attr_HREFLANG (* HREFLANG=. *)
+  | Attr_HSPACE (* HSPACE=. *)
+  | Attr_HTTP_EQUIV (* HTTP_EQUIV=. *)
+  | Attr_ID (* ID=. *)
+  | Attr_ISMAP (* ISMAP=. *)
+  | Attr_ITEMID (* ITEMID=. *)
+  | Attr_ITEMPROP (* ITEMPROP=. *)
+  | Attr_ITEMREF (* ITEMREF=. *)
+  | Attr_ITEMSCOPE (* ITEMSCOPE=. *)
+  | Attr_ITEMTYPE (* ITEMTYPE=. *)
+  | Attr_LABEL (* LABEL=. *)
+  | Attr_LANG (* LANG=. *)
+  | Attr_LANGUAGE (* LANGUAGE=. *)
+  | Attr_LAST_MODIFIED (* LAST_MODIFIED=. *)
+  | Attr_LAST_VISIT (* LAST_VISIT=. *)
+  | Attr_LEFTMARGIN (* LEFTMARGIN=. *)
+  | Attr_LINK (* LINK=. *)
+  | Attr_LONGDESC (* LONGDESC=. *)
+  | Attr_LOWSRC (* LOWSRC=. *)
+  | Attr_MARGINHEIGHT (* MARGINHEIGHT=. *)
+  | Attr_MARGINWIDTH (* MARGINWIDTH=. *)
+  | Attr_MAXLENGTH (* MAXLENGTH=. *)
+  | Attr_MEDIA (* MEDIA=. *)
+  | Attr_METHOD (* METHOD=. *)
+  | Attr_MULTIPLE (* MULTIPLE=. *)
+  | Attr_NAME (* NAME=. *)
+  | Attr_NOHREF (* NOHREF=. *)
+  | Attr_NORESIZE (* NORESIZE=. *)
+  | Attr_NOSHADE (* NOSHADE=. *)
+  | Attr_NOWRAP (* NOWRAP=. *)
+  | Attr_OBJECT (* OBJECT=. *)
+  | Attr_OnAFTERUPDATE (* OnAFTERUPDATE=. *)
+  | Attr_OnBEFOREUNLOAD (* OnBEFOREUNLOAD=. *)
+  | Attr_OnBEFOREUPDATE (* OnBEFOREUPDATE=. *)
+  | Attr_OnBLUR (* OnBLUR=. *)
+  | Attr_OnCHANGE (* OnCHANGE=. *)
+  | Attr_OnCLICK (* OnCLICK=. *)
+  | Attr_OnDATAAVAILABLE (* OnDATAAVAILABLE=. *)
+  | Attr_OnDATASETCHANGED (* OnDATASETCHANGED=. *)
+  | Attr_OnDATASETCOMPLETE (* OnDATASETCOMPLETE=. *)
+  | Attr_OnDBLCLICK (* OnDBLCLICK=. *)
+  | Attr_OnERRORUPDATE (* OnERRORUPDATE=. *)
+  | Attr_OnFOCUS (* OnFOCUS=. *)
+  | Attr_OnKEYDOWN (* OnKEYDOWN=. *)
+  | Attr_OnKEYPRESS (* OnKEYPRESS=. *)
+  | Attr_OnKEYUP (* OnKEYUP=. *)
+  | Attr_OnLOAD (* OnLOAD=. *)
+  | Attr_OnMOUSEDOWN (* OnMOUSEDOWN=. *)
+  | Attr_OnMOUSEMOVE (* OnMOUSEMOVE=. *)
+  | Attr_OnMOUSEOUT (* OnMOUSEOUT=. *)
+  | Attr_OnMOUSEOVER (* OnMOUSEOVER=. *)
+  | Attr_OnMOUSEUP (* OnMOUSEUP=. *)
+  | Attr_OnRESET (* OnRESET=. *)
+  | Attr_OnROWENTER (* OnROWENTER=. *)
+  | Attr_OnROWEXIT (* OnROWEXIT=. *)
+  | Attr_OnSELECT (* OnSELECT=. *)
+  | Attr_OnSUBMIT (* OnSUBMIT=. *)
+  | Attr_OnUNLOAD (* OnUNLOAD=. *)
+  | Attr_PROFILE (* PROFILE=. *)
+  | Attr_PROMPT (* PROMPT=. *)
+  | Attr_RBSPAN (* RBSPAN=. *)
+  | Attr_READONLY (* READONLY=. *)
+  | Attr_REL (* REL=. *)
+  | Attr_REV (* REV=. *)
+  | Attr_RIGHTMARGIN (* RIGHTMARGIN=. *)
+  | Attr_ROLE (* ROLE=. *)
+  | Attr_ROWS (* ROWS=. *)
+  | Attr_ROWSPAN (* ROWSPAN=. *)
+  | Attr_RULES (* RULES=. *)
+  | Attr_SCHEME (* SCHEME=. *)
+  | Attr_SCOPE (* SCOPE=. *)
+  | Attr_SCROLLING (* SCROLLING=. *)
+  | Attr_SELECTED (* SELECTED=. *)
+  | Attr_SHAPE (* SHAPE=. *)
+  | Attr_SHOWGRID (* SHOWGRID=. *)
+  | Attr_SHOWGRIDX (* SHOWGRIDX=. *)
+  | Attr_SHOWGRIDY (* SHOWGRIDY=. *)
+  | Attr_SIZE (* SIZE=. *)
+  | Attr_SPAN (* SPAN=. *)
+  | Attr_SRC (* SRC=. *)
+  | Attr_SRCSET (* SRCSET= (HTML5) *)
+  | Attr_STANDBY (* STANDBY=. *)
+  | Attr_START (* START=. *)
+  | Attr_STYLE (* STYLE=. *)
+  | Attr_SUMMARY (* SUMMARY=. *)
+  | Attr_TABINDEX (* TABINDEX=. *)
+  | Attr_TARGET (* TARGET=. *)
+  | Attr_TEXT (* TEXT=. *)
+  | Attr_TITLE (* TITLE=. *)
+  | Attr_TOPMARGIN (* TOPMARGIN=. *)
+  | Attr_TYPE (* TYPE=. *)
+  | Attr_USEMAP (* USEMAP=. *)
+  | Attr_VALIGN (* VALIGN=. *)
+  | Attr_VALUE (* VALUE=. *)
+  | Attr_VALUETYPE (* VALUETYPE=. *)
+  | Attr_VERSION (* VERSION=. *)
+  | Attr_VLINK (* VLINK=. *)
+  | Attr_VSPACE (* VSPACE=. *)
+  | Attr_WIDTH (* WIDTH=. *)
+  | Attr_WRAP (* WRAP=. *)
+  | Attr_XML_LANG (* XML_LANG=. *)
+  | Attr_XML_SPACE (* XML_SPACE=. *)
+  | Attr_XMLNS (* XMLNS=. *)
+  | Attr_EVENT (* EVENT=. *)
+  | Attr_METHODS (* METHODS=. *)
+  | Attr_N (* N=. *)
+  | Attr_SDAFORM (* SDAFORM=. *)
+  | Attr_SDAPREF (* SDAPREF=. *)
+  | Attr_SDASUFF (* SDASUFF=. *)
+  | Attr_URN (* URN=. *)
+  | Attr_ASYNC
+  | Attr_AUTOCOMPLETE
+  | Attr_AUTOFOCUS
+  | Attr_AUTOPLAY
+  | Attr_CHALLENGE
+  | Attr_CONTENTEDITABLE
+  | Attr_CONTEXTMENU
+  | Attr_CONTROLS
+  | Attr_DEFAULT
+  | Attr_DIRNAME
+  | Attr_DRAGGABLE
+  | Attr_DROPZONE
+  | Attr_FORM
+  | Attr_FORMACTION
+  | Attr_FORMENCTYPE
+  | Attr_FORMMETHOD
+  | Attr_FORMNOVALIDATE
+  | Attr_FORMTARGET
+  | Attr_HIDDEN
+  | Attr_HIGH
+  | Attr_ICON
+  | Attr_KEYTYPE
+  | Attr_KIND
+  | Attr_LIST
+  | Attr_LOOP
+  | Attr_LOW
+  | Attr_MANIFEST
+  | Attr_MAX
+  | Attr_MEDIAGROUP
+  | Attr_MIN
+  | Attr_NOVALIDATE
+  | Attr_OPEN
+  | Attr_OPTIMUM
+  | Attr_OnABORT
+  | Attr_OnAFTERPRINT
+  | Attr_OnBEFOREPRINT
+  | Attr_OnCANPLAY
+  | Attr_OnCANPLAYTHROUGH
+  | Attr_OnCONTEXTMENU
+  | Attr_OnCUECHANGE
+  | Attr_OnDRAG
+  | Attr_OnDRAGEND
+  | Attr_OnDRAGENTER
+  | Attr_OnDRAGLEAVE
+  | Attr_OnDRAGOVER
+  | Attr_OnDRAGSTART
+  | Attr_OnDROP
+  | Attr_OnDURATIONCHANGE
+  | Attr_OnEMPTIED
+  | Attr_OnENDED
+  | Attr_OnERROR
+  | Attr_OnHASHCHANGE
+  | Attr_OnINPUT
+  | Attr_OnINVALID
+  | Attr_OnLOADEDDATA
+  | Attr_OnLOADEDMETADATA
+  | Attr_OnLOADSTART
+  | Attr_OnMESSAGE
+  | Attr_OnMOUSEWHEEL
+  | Attr_OnOFFLINE
+  | Attr_OnONLINE
+  | Attr_OnPAGEHIDE
+  | Attr_OnPAGESHOW
+  | Attr_OnPAUSE
+  | Attr_OnPLAY
+  | Attr_OnPLAYING
+  | Attr_OnPOPSTATE
+  | Attr_OnPROGRESS
+  | Attr_OnRATECHANGE
+  | Attr_OnREADYSTATECHANGE
+  | Attr_OnREDO
+  | Attr_OnRESIZE
+  | Attr_OnSCROLL
+  | Attr_OnSEEKED
+  | Attr_OnSEEKING
+  | Attr_OnSHOW
+  | Attr_OnSTALLED
+  | Attr_OnSTORAGE
+  | Attr_OnSUSPEND
+  | Attr_OnTIMEUPDATE
+  | Attr_OnUNDO
+  | Attr_OnVOLUMECHANGE
+  | Attr_OnWAITING
+  | Attr_PATTERN
+  | Attr_PLACEHOLDER
+  | Attr_POSTER
+  | Attr_PRELOAD
+  | Attr_PUBDATE
+  | Attr_RADIOGROUP
+  | Attr_REQUIRED
+  | Attr_REVERSED
+  | Attr_SANDBOX
+  | Attr_SCOPED
+  | Attr_SEAMLESS
+  | Attr_SIZES
+  | Attr_SPELLCHECK
+  | Attr_SRCDOC
+  | Attr_SRCLANG
+  | Attr_STEP
+  | Attr_ARIA_ACTIVEDESCENDANT
+  | Attr_ARIA_ATOMIC
+  | Attr_ARIA_AUTOCOMPLETE
+  | Attr_ARIA_BUSY
+  | Attr_ARIA_CHECKED
+  | Attr_ARIA_CONTROLS
+  | Attr_ARIA_DESCRIBEDBY
+  | Attr_ARIA_DISABLED
+  | Attr_ARIA_DROPEFFECT
+  | Attr_ARIA_EXPANDED
+  | Attr_ARIA_FLOWTO
+  | Attr_ARIA_GRABBED
+  | Attr_ARIA_HASPOPUP
+  | Attr_ARIA_HIDDEN
+  | Attr_ARIA_INVALID
+  | Attr_ARIA_LABEL
+  | Attr_ARIA_LABELLEDBY
+  | Attr_ARIA_LEVEL
+  | Attr_ARIA_LIVE
+  | Attr_ARIA_MULTILINE
+  | Attr_ARIA_MULTISELECTABLE
+  | Attr_ARIA_ORIENTATION
+  | Attr_ARIA_OWNS
+  | Attr_ARIA_POSINSET
+  | Attr_ARIA_PRESSED
+  | Attr_ARIA_READONLY
+  | Attr_ARIA_RELEVANT
+  | Attr_ARIA_REQUIRED
+  | Attr_ARIA_SELECTED
+  | Attr_ARIA_SETSIZE
+  | Attr_ARIA_SORT
+  | Attr_ARIA_VALUEMAX
+  | Attr_ARIA_VALUEMIN
+  | Attr_ARIA_VALUENOW
+  | Attr_ARIA_VALUETEXT
+  | Attr_X (* X=. *)
+  | Attr_Y (* Y=. *)
+  | Attr_VIEWBOX (* VIEWBOX=. *)
+  | Attr_PRESERVEASPECTRATIO (* PRESERVEASPECTRATIO=. *)
+  | Attr_ZOOMANDPAN (* ZOOMANDPAN=. *)
+  | Attr_BASEPROFILE (* BASEPROFILE=. *)
+  | Attr_CONTENTSCRIPTTYPE (* CONTENTSCRIPTTYPE=. *)
+  | Attr_CONTENTSTYLETYPE (* CONTENTSTYLETYPE=. *)
+  | Attr_DISPLAY (* DISPLAY= (html5) *)
+  | N_TIDY_ATTRIBS
+
 type doc
 type node
 type attr
