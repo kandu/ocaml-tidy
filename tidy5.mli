@@ -205,6 +205,8 @@ val isHeader : node -> bool
 
 val hasText : node -> bool
 val getId : node -> tagId
+val getValue : node -> string option
+val getValue_exn : node -> string
 val getText : node -> string option
 val getText_exn : node -> string
 val line : node -> int

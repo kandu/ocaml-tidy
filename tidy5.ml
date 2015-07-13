@@ -208,6 +208,7 @@ module Stub = struct
 
   external nodeGetId: node -> tagId= "tidyNodeGetId_stub"
   external nodeGetType: node -> nodeType= "tidyNodeGetType_stub"
+  external nodeGetValue: doc -> node -> string option= "tidyNodeGetValue_stub"
   external nodeGetName: node -> string= "tidyNodeGetName_stub"
   external nodeIsText: node -> bool= "tidyNodeIsText_stub"
   external nodeIsProp: doc -> node -> bool= "tidyNodeIsProp_stub"
@@ -322,6 +323,11 @@ let isText {doc; node}= Stub.nodeIsText node
 let isProp {doc; node}= Stub.nodeIsProp doc node
 let isHeader {doc; node}= Stub.nodeIsHeader node
 let hasText {doc; node}= Stub.nodeHasText doc node
+let getValue {doc; node}= Stub.nodeGetValue doc node
+let getValue_exn node=
+  match getValue node with
+  | Some value-> value
+  | None-> raise Not_found
 let getId {doc; node}= Stub.nodeGetId node
 let getText {doc; node}= Stub.nodeGetText doc node
 let getText_exn node=
