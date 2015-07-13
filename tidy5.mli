@@ -207,6 +207,8 @@ val hasText : node -> bool
 val getId : node -> tagId
 val getText : node -> string option
 val getText_exn : node -> string
+val line : node -> int
+val column : node -> int
 
 val extractText : node -> string list
 

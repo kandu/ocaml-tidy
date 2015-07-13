@@ -214,6 +214,8 @@ module Stub = struct
   external nodeIsHeader: node -> bool= "tidyNodeIsHeader_stub"
   external nodeHasText: doc -> node -> bool= "tidyNodeHasText_stub"
   external nodeGetText: doc -> node -> string option= "tidyNodeGetText_stub"
+  external nodeLine: node -> int= "tidyNodeLine_stub"
+  external nodeColumn: node -> int= "tidyNodeColumn_stub"
 end
 
 type doc= Stub.doc
@@ -326,6 +328,9 @@ let getText_exn node=
   match getText node with
   | Some text-> text
   | None-> raise Not_found
+
+let line {doc; node}= Stub.nodeLine node
+let column {doc; node}= Stub.nodeColumn node
 
 let rec extractText node=
   match getType node with
