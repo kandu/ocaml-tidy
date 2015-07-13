@@ -152,6 +152,20 @@ CAMLprim value tidyGetBody_stub(value doc) {
     CAMLreturn(result);
 }
 
+CAMLprim value tidyAttrGetById_stub(value node, value attrId) {
+    CAMLparam2(node, attrId);
+    CAMLlocal2(result, data);
+    TidyAttr attr= tidyAttrGetById(node_val(node), Int_val(attrId));
+    if (attr == NULL) {
+        result= Val_int(0); // None
+    } else {
+        result= caml_alloc(1, 0);
+        data= caml_alloc_custom(&p_ops, sizeof(TidyAttr), 0,0);
+        attr_val(data)= attr;
+        Store_field(result, 0, data);
+    }
+}
+
 CAMLprim value tidyGetParent_stub(value node) {
     CAMLparam1(node);
     CAMLlocal2(result, data);
