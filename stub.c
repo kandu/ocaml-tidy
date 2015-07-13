@@ -324,3 +324,17 @@ CAMLprim value tidyNodeGetText_stub(value doc, value node) {
     CAMLreturn(result);
 }
 
+CAMLprim value tidyNodeLine_stub(value node) {
+    CAMLparam1(node);
+    CAMLlocal1(result);
+    result= Val_int(tidyNodeLine(node_val(node)));
+    CAMLreturn(result);
+}
+
+CAMLprim value tidyNodeColumn_stub(value node) {
+    CAMLparam1(node);
+    CAMLlocal1(result);
+    result= Val_int(tidyNodeColumn(node_val(node)));
+    CAMLreturn(result);
+}
+
