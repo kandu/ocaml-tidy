@@ -512,6 +512,9 @@ module Stub = struct
   external getHtml: doc -> node= "tidyGetHtml_stub"
   external getHead: doc -> node= "tidyGetHead_stub"
   external getBody: doc -> node= "tidyGetBody_stub"
+
+  external attrGetById: node -> attrId -> attr option= "tidyAttrGetById_stub"
+
   external getParent: node -> node option= "tidyGetParent_stub"
   external getChild: node -> node option= "tidyGetChild_stub"
   external getNext: node -> node option= "tidyGetNext_stub"
@@ -587,6 +590,11 @@ let docGetRoot doc= {doc; node= Stub.getRoot doc}
 let docGetHtml doc= {doc; node= Stub.getHtml doc}
 let docGetHead doc= {doc; node= Stub.getHead doc}
 let docGetBody doc= {doc; node= Stub.getBody doc}
+
+let attrGetById {doc; node} attrId=
+  match Stub.attrGetById node attrId with
+  | Some attr-> Some { doc; attr }
+  | None-> None
 
 let getParent {doc; node}=
   match Stub.getParent node with
