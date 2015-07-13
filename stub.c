@@ -260,6 +260,13 @@ CAMLprim value tidyAttrValue_stub(value attr) {
     CAMLreturn(result);
 }
 
+CAMLprim value tidyNodeGetId_stub(value node) {
+    CAMLparam1(node);
+    CAMLlocal1(result);
+    result= Val_int(tidyNodeGetId(node_val(node)));
+    CAMLreturn(result);
+}
+
 CAMLprim value tidyNodeGetType_stub(value node) {
     CAMLparam1(node);
     CAMLlocal1(result);
@@ -308,9 +315,10 @@ CAMLprim value tidyNodeGetText_stub(value doc, value node) {
     TidyBuffer buffer;
     tidyBufInit(&buffer);
     if (tidyNodeGetText(doc_val(doc), node_val(node), &buffer)) {
-        result= caml_copy_string((char*)buffer.bp);
+        result= caml_alloc(1, 0);
+        Store_field(result, 0, caml_copy_string((char*)buffer.bp));
     } else {
-        result= caml_copy_string("");
+        result= Val_int(0); // None
     }
     tidyBufFree(&buffer);
     CAMLreturn(result);
