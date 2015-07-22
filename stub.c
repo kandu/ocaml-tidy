@@ -164,6 +164,7 @@ CAMLprim value tidyAttrGetById_stub(value node, value attrId) {
         attr_val(data)= attr;
         Store_field(result, 0, data);
     }
+    CAMLreturn(result);
 }
 
 CAMLprim value tidyGetParent_stub(value node) {
