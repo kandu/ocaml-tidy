@@ -514,6 +514,8 @@ module Stub = struct
   external getBody: doc -> node= "tidyGetBody_stub"
 
   external attrGetId: attr -> attrId = "tidyAttrGetId_stub"
+  external attrIsEvent: attr -> bool = "tidyAttrIsEvent_stub"
+  external attrIsProp: attr -> bool = "tidyAttrIsProp_stub"
 
   external attrGetById: node -> attrId -> attr option= "tidyAttrGetById_stub"
 
@@ -594,6 +596,8 @@ let docGetHead doc= {doc; node= Stub.getHead doc}
 let docGetBody doc= {doc; node= Stub.getBody doc}
 
 let attrGetId {doc; attr}= Stub.attrGetId attr
+let attrIsEvent {doc; attr}= Stub.attrIsEvent attr
+let attrIsProp {doc; attr}= Stub.attrIsProp attr
 
 let attrGetById {doc; node} attrId=
   match Stub.attrGetById node attrId with
