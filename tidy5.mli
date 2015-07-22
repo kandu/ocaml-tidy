@@ -508,7 +508,9 @@ val docGetHtml : doc -> node
 val docGetHead : doc -> node
 val docGetBody : doc -> node
 
-val attrGetById : node -> attrId-> attr option
+val attrGetId : attr -> attrId
+
+val attrGetById : node -> attrId -> attr option
 
 val getParent : node -> node option
 val getChildren : node -> node list

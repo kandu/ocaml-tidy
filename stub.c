@@ -152,6 +152,13 @@ CAMLprim value tidyGetBody_stub(value doc) {
     CAMLreturn(result);
 }
 
+CAMLprim value tidyAttrGetId_stub(value attr) {
+    CAMLparam1(attr);
+    CAMLlocal1(result);
+    result= Val_int(tidyAttrGetId(attr_val(attr)));
+    CAMLreturn(result);
+}
+
 CAMLprim value tidyAttrGetById_stub(value node, value attrId) {
     CAMLparam2(node, attrId);
     CAMLlocal2(result, data);
