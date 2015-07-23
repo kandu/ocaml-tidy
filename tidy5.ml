@@ -508,6 +508,9 @@ module Stub = struct
   external parseFile: doc -> string -> result= "tidyParseFile_stub"
   external parseString: doc -> string -> result= "tidyParseString_stub"
 
+  external saveFile: doc -> string -> unit= "tidySaveFile_stub"
+  external saveString: doc -> string option= "tidySaveString_stub"
+
   external getRoot: doc -> node= "tidyGetRoot_stub"
   external getHtml: doc -> node= "tidyGetHtml_stub"
   external getHead: doc -> node= "tidyGetHead_stub"
@@ -589,6 +592,9 @@ let parseString config str=
   match Stub.parseString doc str with
   | Stub.Success | Stub.Td_warning | Stub.Td_error -> doc
   | Stub.Sv_error-> failwith "sv_error"
+
+let saveFile= Stub.saveFile
+let saveString= Stub.saveString
 
 let docGetRoot doc= {doc; node= Stub.getRoot doc}
 let docGetHtml doc= {doc; node= Stub.getHtml doc}

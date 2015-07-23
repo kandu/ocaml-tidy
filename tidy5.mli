@@ -503,6 +503,9 @@ module Config :
 val parseFile : Config.t list -> string -> doc
 val parseString : Config.t list -> string -> doc
 
+val saveFile : doc -> string -> unit
+val saveString : doc -> string option
+
 val docGetRoot : doc -> node
 val docGetHtml : doc -> node
 val docGetHead : doc -> node
