@@ -508,6 +508,10 @@ module Stub = struct
   external parseFile: doc -> string -> result= "tidyParseFile_stub"
   external parseString: doc -> string -> result= "tidyParseString_stub"
 
+  external cleanAndRepair: doc -> unit= "tidyCleanAndRepair_stub" "noalloc"
+  external reportDoctype: doc -> unit= "tidyReportDoctype_stub" "noalloc"
+  external runDiagnostics: doc -> unit= "tidyRunDiagnostics_stub" "noalloc"
+
   external saveFile: doc -> string -> unit= "tidySaveFile_stub"
   external saveString: doc -> string option= "tidySaveString_stub"
 
@@ -592,6 +596,12 @@ let parseString config str=
   match Stub.parseString doc str with
   | Stub.Success | Stub.Td_warning | Stub.Td_error -> doc
   | Stub.Sv_error-> failwith "sv_error"
+
+let cleanAndRepair= Stub.cleanAndRepair
+let reportDoctype= Stub.reportDoctype
+let runDiagnostics doc=
+  cleanAndRepair doc;
+  Stub.cleanAndRepair doc
 
 let saveFile= Stub.saveFile
 let saveString= Stub.saveString

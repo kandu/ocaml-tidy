@@ -503,6 +503,10 @@ module Config :
 val parseFile : Config.t list -> string -> doc
 val parseString : Config.t list -> string -> doc
 
+val cleanAndRepair: doc -> unit
+val reportDoctype: doc -> unit
+val runDiagnostics: doc -> unit
+
 val saveFile : doc -> string -> unit
 val saveString : doc -> string option
 

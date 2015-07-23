@@ -86,6 +86,21 @@ CAMLprim value tidyParseString_stub(value doc, value file) {
     CAMLreturn(result);
 }
 
+CAMLprim value tidyCleanAndRepair_stub(value doc) {
+    tidyCleanAndRepair(doc_val(doc));
+    return Val_unit;
+}
+
+CAMLprim value tidyReportDoctype_stub(value doc) {
+    tidyReportDoctype(doc_val(doc));
+    return Val_unit;
+}
+
+CAMLprim value tidyRunDiagnostics_stub(value doc) {
+    tidyRunDiagnostics(doc_val(doc));
+    return Val_unit;
+}
+
 CAMLprim value tidySaveFile_stub(value doc, value file) {
     CAMLparam2(doc, file);
     tidySaveFile(doc_val(doc), String_val(file));
