@@ -617,6 +617,10 @@ module Stub = struct
   external optGetInt: doc -> optionId -> int = "tidyOptGetInt_stub"
   external optGetBool: doc -> optionId -> bool = "tidyOptGetBool_stub"
 
+  external optSetValue: doc -> optionId -> string -> unit= "tidyOptSetValue_stub"
+  external optSetInt: doc -> optionId -> int -> unit= "tidyOptSetInt_stub"
+  external optSetBool: doc -> optionId -> bool -> unit= "tidyOptSetBool_stub"
+
   external setCharEncoding: doc -> string -> int = "tidySetCharEncoding_stub"
   external setInCharEncoding: doc -> string -> int = "tidySetInCharEncoding_stub"
   external setOutCharEncoding: doc -> string -> int = "tidySetOutCharEncoding_stub"
