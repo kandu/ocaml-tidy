@@ -695,6 +695,12 @@ type opt=
   | Int of int
   | Bool of bool
 
+let string_of_opt opt=
+  match opt with
+  | Str v-> sprintf "%s:string" v
+  | Int v-> sprintf "%d:int" v
+  | Bool v-> sprintf "%b:bool" v
+
 module Config = struct
   let blockTags doc tags=
     Stub.declareBlockTags doc (String.concat ~sep:" " tags)
