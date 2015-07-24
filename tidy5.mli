@@ -588,6 +588,7 @@ type attr
 module Config :
   sig
     val blockTags : doc -> string list -> unit
+
     type t =
       | BlockTags of string list
       | Encoding of string

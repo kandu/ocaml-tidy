@@ -16,6 +16,7 @@
 #define doc_val(v) (*(TidyDoc*)Data_custom_val(v))
 #define node_val(v) (*(TidyNode*)Data_custom_val(v))
 #define attr_val(v) (*(TidyAttr*)Data_custom_val(v))
+#define opt_val(v) (*(TidyOption*)Data_custom_val(v))
 
 static intnat p_hash_op(value v) {
     return (intnat)p_val(v);
@@ -63,6 +64,14 @@ CAMLprim value tidyCreate_stub(value unit) {
     tidyOptSetBool(doc, TidyShowWarnings, 0);
     tidyOptSetValue(doc, TidyCharEncoding, "utf8");
     doc_val(result)= doc;
+    CAMLreturn(result);
+}
+
+CAMLprim value tidyGetOption_stub(value doc, value optId) {
+    CAMLparam2(doc, optId);
+    CAMLlocal1(result);
+    result= caml_alloc_custom(&p_ops, sizeof(TidyOption), 0,0);
+    opt_val(result)= tidyGetOption(doc_val(doc), Int_val(optId));
     CAMLreturn(result);
 }
 
