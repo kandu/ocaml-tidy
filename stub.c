@@ -82,6 +82,23 @@ CAMLprim value tidyOptGetName_stub(value opt) {
     CAMLreturn(result);
 }
 
+CAMLprim value tidyOptGetType_stub(value opt) {
+    CAMLparam1(opt);
+    CAMLlocal1(result);
+    switch (tidyOptGetType(opt_val(opt))) {
+        case TidyString:
+            result= Val_int(0);
+            break;
+        case TidyInteger:
+            result= Val_int(1);
+            break;
+        case TidyBoolean:
+            result= Val_int(2);
+            break;
+    }
+    CAMLreturn(result);
+}
+
 CAMLprim value tidyParseFile_stub(value doc, value file) {
     CAMLparam2(doc, file);
     CAMLlocal1(result);
