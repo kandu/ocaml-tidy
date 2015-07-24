@@ -99,6 +99,13 @@ CAMLprim value tidyOptGetType_stub(value opt) {
     CAMLreturn(result);
 }
 
+CAMLprim value tidyOptGetId_stub(value opt) {
+    CAMLparam1(opt);
+    CAMLlocal1(result);
+    result= Val_int(tidyOptGetId(opt_val(opt)));
+    CAMLreturn(result);
+}
+
 CAMLprim value tidyOptGetValue_stub(value doc, value optId) {
     CAMLparam2(doc, optId);
     CAMLlocal1(result);
