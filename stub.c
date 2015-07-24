@@ -99,6 +99,31 @@ CAMLprim value tidyOptGetType_stub(value opt) {
     CAMLreturn(result);
 }
 
+CAMLprim value tidyOptGetValue_stub(value doc, value optId) {
+    CAMLparam2(doc, optId);
+    CAMLlocal1(result);
+    result= caml_copy_string(tidyOptGetValue(doc_val(doc), Int_val(optId)));
+    CAMLreturn(result);
+}
+
+CAMLprim value tidyOptGetInt_stub(value doc, value optId) {
+    CAMLparam2(doc, optId);
+    CAMLlocal1(result);
+    result= Val_int(tidyOptGetInt(doc_val(doc), Int_val(optId)));
+    CAMLreturn(result);
+}
+
+CAMLprim value tidyOptGetBool_stub(value doc, value optId) {
+    CAMLparam2(doc, optId);
+    CAMLlocal1(result);
+    if (tidyOptGetBool(doc_val(doc), Int_val(optId))) {
+        result= Val_true;
+    } else {
+        result= Val_false;
+    }
+    CAMLreturn(result);
+}
+
 CAMLprim value tidyParseFile_stub(value doc, value file) {
     CAMLparam2(doc, file);
     CAMLlocal1(result);
