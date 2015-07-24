@@ -587,6 +587,8 @@ module Stub = struct
   type doc
   type node
   type attr
+  type opt
+
 
   external create: unit -> doc= "tidyCreate_stub"
 
@@ -595,6 +597,18 @@ module Stub = struct
     | Td_warning  (* 1 *)
     | Td_error    (* 2 *)
     | Sv_error    (* -1 *)
+
+  type optionType=
+    | String
+    | Integer
+    | Boolean
+
+  type optionValue=
+    | Str of string
+    | Int of int
+    | Bool of bool
+
+  external getOption: doc -> optionId -> opt = "tidyGetOption_stub"
 
   external setCharEncoding: doc -> string -> int = "tidySetCharEncoding_stub"
   external setInCharEncoding: doc -> string -> int = "tidySetInCharEncoding_stub"
