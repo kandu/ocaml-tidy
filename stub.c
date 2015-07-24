@@ -109,7 +109,12 @@ CAMLprim value tidyOptGetId_stub(value opt) {
 CAMLprim value tidyOptGetValue_stub(value doc, value optId) {
     CAMLparam2(doc, optId);
     CAMLlocal1(result);
-    result= caml_copy_string(tidyOptGetValue(doc_val(doc), Int_val(optId)));
+    char const * v= tidyOptGetValue(doc_val(doc), Int_val(optId));
+    if (v != NULL) {
+        result= caml_copy_string(v);
+    } else {
+        result= caml_copy_string("");
+    }
     CAMLreturn(result);
 }
 

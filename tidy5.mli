@@ -584,6 +584,9 @@ type optionId=
 type doc
 type node
 type attr
+type opt
+
+val string_of_opt : opt -> string
 
 module Config :
   sig
@@ -601,6 +604,9 @@ module Config :
 
 val parseFile : Config.t list -> string -> doc
 val parseString : Config.t list -> string -> doc
+
+val getOption : doc -> optionId -> opt
+val setOption : doc -> optionId -> opt -> unit
 
 val cleanAndRepair: doc -> unit
 val reportDoctype: doc -> unit
