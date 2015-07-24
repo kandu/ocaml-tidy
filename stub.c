@@ -75,6 +75,13 @@ CAMLprim value tidyGetOption_stub(value doc, value optId) {
     CAMLreturn(result);
 }
 
+CAMLprim value tidyOptGetName_stub(value opt) {
+    CAMLparam1(opt);
+    CAMLlocal1(result);
+    result= caml_copy_string(tidyOptGetName(opt_val(opt)));
+    CAMLreturn(result);
+}
+
 CAMLprim value tidyParseFile_stub(value doc, value file) {
     CAMLparam2(doc, file);
     CAMLlocal1(result);
