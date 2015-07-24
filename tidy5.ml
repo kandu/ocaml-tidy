@@ -603,10 +603,17 @@ module Stub = struct
     | Integer
     | Boolean
 
-  type optionValue=
-    | Str of string
-    | Int of int
-    | Bool of bool
+  let string_of_optionType= function
+    | String-> "string"
+    | Integer-> "int"
+    | Boolean-> "bool"
+
+  let optionType_of_string str=
+    match String.lowercase str with
+    | "string"-> String
+    | "int"-> Integer
+    | "bool"-> Boolean
+    | _-> failwith "unknown type"
 
   external getOption: doc -> optionId -> opt = "tidyGetOption_stub"
   external optGetName: opt -> string = "tidyOptGetName_stub"
@@ -683,6 +690,11 @@ type attr= {
   attr: Stub.attr;
 }
 
+type opt=
+  | Str of string
+  | Int of int
+  | Bool of bool
+
 module Config = struct
   let blockTags doc tags=
     Stub.declareBlockTags doc (String.concat ~sep:" " tags)
@@ -719,6 +731,39 @@ let parseString config str=
   match Stub.parseString doc str with
   | Stub.Success | Stub.Td_warning | Stub.Td_error -> doc
   | Stub.Sv_error-> failwith "sv_error"
+
+let getOption doc optId=
+  match Stub.getOption doc optId |> Stub.optGetType with
+  | Stub.String-> Str (Stub.optGetValue doc optId)
+  | Stub.Integer-> Int (Stub.optGetInt doc optId)
+  | Stub.Boolean-> Bool (Stub.optGetBool doc optId)
+
+let setOption doc optId value=
+  let opt= Stub.getOption doc optId in
+  let name= Stub.optGetName opt
+  and optType= Stub.optGetType opt in
+  match optType with
+  | Stub.String->
+    (match value with
+    | Str v-> Stub.optSetValue doc optId v
+    | _-> failwith (sprintf
+      "%s requires a string parameter, but a %s is encounted"
+      name
+      (Stub.string_of_optionType optType)))
+  | Stub.Integer->
+    (match value with
+    | Int v-> Stub.optSetInt doc optId v
+    | _-> failwith (sprintf
+      "%s requires a int parameter, but a %s is encounted"
+      name
+      (Stub.string_of_optionType optType)))
+  | Stub.Boolean->
+    (match value with
+    | Bool v-> Stub.optSetBool doc optId v
+    | _-> failwith (sprintf
+      "%s requires a bool parameter, but a %s is encounted"
+      name
+      (Stub.string_of_optionType optType)))
 
 let cleanAndRepair= Stub.cleanAndRepair
 let reportDoctype= Stub.reportDoctype
