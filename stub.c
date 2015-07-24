@@ -122,13 +122,7 @@ CAMLprim value tidyOptGetInt_stub(value doc, value optId) {
 
 CAMLprim value tidyOptGetBool_stub(value doc, value optId) {
     CAMLparam2(doc, optId);
-    CAMLlocal1(result);
-    if (tidyOptGetBool(doc_val(doc), Int_val(optId))) {
-        result= Val_true;
-    } else {
-        result= Val_false;
-    }
-    CAMLreturn(result);
+    CAMLreturn(Val_bool(tidyOptGetBool(doc_val(doc), Int_val(optId))));
 }
 
 CAMLprim value tidyOptSetValue_stub(value doc, value optId, value val) {
