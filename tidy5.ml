@@ -611,6 +611,7 @@ module Stub = struct
   external getOption: doc -> optionId -> opt = "tidyGetOption_stub"
   external optGetName: optionId -> string = "tidyOptGetName_stub"
   external optGetType: optionId -> optionType = "tidyOptGetType_stub"
+  external optGetId: opt -> optionId = "tidyOptGetId_stub"
 
   external optGetValue: doc -> optionId -> string = "tidyOptGetValue_stub"
   external optGetInt: doc -> optionId -> int = "tidyOptGetInt_stub"
