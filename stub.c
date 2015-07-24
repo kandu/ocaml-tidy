@@ -131,6 +131,24 @@ CAMLprim value tidyOptGetBool_stub(value doc, value optId) {
     CAMLreturn(result);
 }
 
+CAMLprim value tidyOptSetValue_stub(value doc, value optId, value val) {
+    CAMLparam3(doc, optId, val);
+    tidyOptSetValue(doc_val(doc), Int_val(optId), String_val(val));
+    CAMLreturn(Val_unit);
+}
+
+CAMLprim value tidyOptSetInt_stub(value doc, value optId, value val) {
+    CAMLparam3(doc, optId, val);
+    tidyOptSetInt(doc_val(doc), Int_val(optId), Int_val(val));
+    CAMLreturn(Val_unit);
+}
+
+CAMLprim value tidyOptSetBool_stub(value doc, value optId, value val) {
+    CAMLparam3(doc, optId, val);
+    tidyOptSetBool(doc_val(doc), Int_val(optId), Bool_val(val));
+    CAMLreturn(Val_unit);
+}
+
 CAMLprim value tidyParseFile_stub(value doc, value file) {
     CAMLparam2(doc, file);
     CAMLlocal1(result);
