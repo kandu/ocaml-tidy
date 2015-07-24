@@ -559,9 +559,9 @@ type optionId=
   | TidyJoinClasses  (* Join multiple class attributes. *)
   | TidyJoinStyles  (* Join multiple style attributes. *)
   | TidyEscapeCdata  (* Replace <![CDATA[]]> sections with escaped text. *)
-  | TidyLanguageNotUsed
-  | TidyNCRNotUsed
-  | TidyOutputBOMNotUsed
+  | TidyLanguage
+  | TidyNCR
+  | TidyOutputBOM
   | TidyReplaceColor  (* Replace hex color attribute values with names. *)
   | TidyCSSPrefix  (* CSS class naming for -clean option. *)
   | TidyInlineTags  (* Declared inline tags. *)
@@ -570,7 +570,7 @@ type optionId=
   | TidyPreTags  (* Declared pre tags. *)
   | TidyAccessibilityCheckLevel  (* Accessibility check level 0 (old style), or 1, 2, 3. *)
   | TidyVertSpace  (* degree to which markup is spread out vertically *)
-  | TidyPunctWrapNotUsed
+  | TidyPunctWrap
   | TidyMergeEmphasis  (* Merge nested B and I elements. *)
   | TidyMergeDivs  (* Merge multiple DIVs. *)
   | TidyDecorateInferredUL  (* Mark inferred UL elements with no indent CSS. *)
