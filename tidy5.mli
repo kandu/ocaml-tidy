@@ -599,6 +599,8 @@ module Config :
       | DropEmptyParas of bool
       | DropEmptyElems of bool
     val apply : t Core_kernel.Std.List.t -> doc -> unit
+    val getOption : doc -> optionId -> opt
+    val setOption : doc -> optionId -> opt -> unit
     val getIndentSpaces : doc -> int
     val setIndentSpaces : doc -> int -> unit
     val getWrap : doc -> int
@@ -789,9 +791,6 @@ module Config :
 
 val parseFile : Config.t list -> string -> doc
 val parseString : Config.t list -> string -> doc
-
-val getOption : doc -> optionId -> opt
-val setOption : doc -> optionId -> opt -> unit
 
 val cleanAndRepair: doc -> unit
 val reportDoctype: doc -> unit
