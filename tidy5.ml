@@ -713,6 +713,27 @@ let opt_bool= function
   | Bool s-> s
   | _-> failwith "boolean option expected"
 
+let create= Stub.create
+
+let parseFile doc filePath=
+  match Stub.parseFile doc filePath with
+  | Stub.Success | Stub.Td_warning | Stub.Td_error -> ()
+  | Stub.Sv_error-> failwith (sprintf "can't parse file %s" filePath)
+
+let parseString doc str=
+  match Stub.parseString doc str with
+  | Stub.Success | Stub.Td_warning | Stub.Td_error -> ()
+  | Stub.Sv_error-> failwith "sv_error"
+
+let cleanAndRepair= Stub.cleanAndRepair
+let reportDoctype= Stub.reportDoctype
+let runDiagnostics doc=
+  cleanAndRepair doc;
+  Stub.cleanAndRepair doc
+
+let saveFile= Stub.saveFile
+let saveString= Stub.saveString
+
 module Config = struct
   let blockTags doc tags=
     Stub.declareBlockTags doc (String.concat ~sep:" " tags)
@@ -1054,114 +1075,99 @@ module Config = struct
     String.concat ~sep:" " opt |> Raw.setNewPreTags doc
 end
 
-let create= Stub.create
+module Attr = struct
+  let attrGetId {doc; attr}= Stub.attrGetId attr
+  let attrIsEvent {doc; attr}= Stub.attrIsEvent attr
+  let attrIsProp {doc; attr}= Stub.attrIsProp attr
 
-let parseFile doc filePath=
-  match Stub.parseFile doc filePath with
-  | Stub.Success | Stub.Td_warning | Stub.Td_error -> ()
-  | Stub.Sv_error-> failwith (sprintf "can't parse file %s" filePath)
+  let attrGetById {doc; node} attrId=
+    match Stub.attrGetById node attrId with
+    | Some attr-> Some { doc; attr }
+    | None-> None
+end
 
-let parseString doc str=
-  match Stub.parseString doc str with
-  | Stub.Success | Stub.Td_warning | Stub.Td_error -> ()
-  | Stub.Sv_error-> failwith "sv_error"
+module DocTree = struct
+  let getRoot doc= {doc; node= Stub.getRoot doc}
+  let getHtml doc= {doc; node= Stub.getHtml doc}
+  let getHead doc= {doc; node= Stub.getHead doc}
+  let getBody doc= {doc; node= Stub.getBody doc}
 
-let cleanAndRepair= Stub.cleanAndRepair
-let reportDoctype= Stub.reportDoctype
-let runDiagnostics doc=
-  cleanAndRepair doc;
-  Stub.cleanAndRepair doc
+  let getParent {doc; node}=
+    match Stub.getParent node with
+    | Some node -> Some {doc;node}
+    | None-> None
 
-let saveFile= Stub.saveFile
-let saveString= Stub.saveString
-
-let docGetRoot doc= {doc; node= Stub.getRoot doc}
-let docGetHtml doc= {doc; node= Stub.getHtml doc}
-let docGetHead doc= {doc; node= Stub.getHead doc}
-let docGetBody doc= {doc; node= Stub.getBody doc}
-
-let attrGetId {doc; attr}= Stub.attrGetId attr
-let attrIsEvent {doc; attr}= Stub.attrIsEvent attr
-let attrIsProp {doc; attr}= Stub.attrIsProp attr
-
-let attrGetById {doc; node} attrId=
-  match Stub.attrGetById node attrId with
-  | Some attr-> Some { doc; attr }
-  | None-> None
-
-let getParent {doc; node}=
-  match Stub.getParent node with
-  | Some node -> Some {doc;node}
-  | None-> None
-
-let getChildren {doc; node}=
-  let rec get_children node=
-    match Stub.getNext node with
-    | Some node-> {doc; node} :: get_children node
+  let getChildren {doc; node}=
+    let rec get_children node=
+      match Stub.getNext node with
+      | Some node-> {doc; node} :: get_children node
+      | None-> []
+    in
+    match Stub.getChild node with
+    | Some node -> {doc; node} :: get_children node
     | None-> []
-  in
-  match Stub.getChild node with
-  | Some node -> {doc; node} :: get_children node
-  | None-> []
 
-let getAttrs {doc; node}=
-  let rec get_attrs attr map=
-    match Stub.attrNext attr with
+  let getAttrs {doc; node}=
+    let rec get_attrs attr map=
+      match Stub.attrNext attr with
+      | Some attr-> get_attrs attr
+        (String.Map.add map
+          ~key:(Stub.attrName attr)
+          ~data:(Stub.attrValue attr))
+      | None-> map
+    in
+    match Stub.attrFirst node with
     | Some attr-> get_attrs attr
-      (String.Map.add map
-        ~key:(Stub.attrName attr)
-        ~data:(Stub.attrValue attr))
-    | None-> map
-  in
-  match Stub.attrFirst node with
-  | Some attr-> get_attrs attr
-      (String.Map.singleton (Stub.attrName attr) (Stub.attrValue attr))
-  | None-> String.Map.empty
-
-let getType {doc; node}= Stub.nodeGetType node
-let getName {doc; node}= let open Stub in
-  match nodeGetType node with
-  | Node_Root-> "root"
-  | Node_DocType-> "doctype"
-  | Node_Comment-> "comment"
-  | Node_ProcIns-> "processing instruction"
-  | Node_Text-> "text"
-  | Node_Start | Node_End | Node_StartEnd-> nodeGetName node
-  | Node_CDATA-> "cdata"
-  | Node_Section-> "xml section"
-  | Node_Asp-> "asp"
-  | Node_Jste-> "jste"
-  | Node_Php-> "php"
-  | Node_XmlDecl-> "xml declaration"
+        (String.Map.singleton (Stub.attrName attr) (Stub.attrValue attr))
+    | None-> String.Map.empty
+end
 
 
-let isText {doc; node}= Stub.nodeIsText node
-let isProp {doc; node}= Stub.nodeIsProp doc node
-let isHeader {doc; node}= Stub.nodeIsHeader node
-let hasText {doc; node}= Stub.nodeHasText doc node
-let getValue {doc; node}= Stub.nodeGetValue doc node
-let getValue_exn node=
-  match getValue node with
-  | Some value-> value
-  | None-> raise Not_found
-let getId {doc; node}= Stub.nodeGetId node
-let getText {doc; node}= Stub.nodeGetText doc node
-let getText_exn node=
-  match getText node with
-  | Some text-> text
-  | None-> raise Not_found
+module Node = struct
+  let getType {doc; node}= Stub.nodeGetType node
+  let getName {doc; node}= let open Stub in
+    match nodeGetType node with
+    | Node_Root-> "root"
+    | Node_DocType-> "doctype"
+    | Node_Comment-> "comment"
+    | Node_ProcIns-> "processing instruction"
+    | Node_Text-> "text"
+    | Node_Start | Node_End | Node_StartEnd-> nodeGetName node
+    | Node_CDATA-> "cdata"
+    | Node_Section-> "xml section"
+    | Node_Asp-> "asp"
+    | Node_Jste-> "jste"
+    | Node_Php-> "php"
+    | Node_XmlDecl-> "xml declaration"
 
-let line {doc; node}= Stub.nodeLine node
-let column {doc; node}= Stub.nodeColumn node
+  let isText {doc; node}= Stub.nodeIsText node
+  let isProp {doc; node}= Stub.nodeIsProp doc node
+  let isHeader {doc; node}= Stub.nodeIsHeader node
+  let hasText {doc; node}= Stub.nodeHasText doc node
+  let getValue {doc; node}= Stub.nodeGetValue doc node
+  let getValue_exn node=
+    match getValue node with
+    | Some value-> value
+    | None-> raise Not_found
+  let getId {doc; node}= Stub.nodeGetId node
+  let getText {doc; node}= Stub.nodeGetText doc node
+  let getText_exn node=
+    match getText node with
+    | Some text-> text
+    | None-> raise Not_found
 
-let rec extractText node=
-  match getType node with
-  | Node_Text-> [Option.value (getText node) ~default:""]
-  | Node_Start | Node_End | Node_StartEnd->
-    getChildren node
-      |> List.map ~f:extractText
-      |> List.concat
-  | _-> []
+  let line {doc; node}= Stub.nodeLine node
+  let column {doc; node}= Stub.nodeColumn node
+
+  let rec extractText node=
+    match getType node with
+    | Node_Text-> [Option.value (getText node) ~default:""]
+    | Node_Start | Node_End | Node_StartEnd->
+      DocTree.getChildren node
+        |> List.map ~f:extractText
+        |> List.concat
+    | _-> []
+end
 
 module Tree = struct
   type index= {
@@ -1170,13 +1176,13 @@ module Tree = struct
   }
 
   let rec generateIndex node=
-    if isText node then
+    if Node.isText node then
       { byType= String.Map.singleton "text" [node];
         byAttr= String.Map.empty}
     else
-      let name= getName node
-      and attrs= getAttrs node
-      and childrenIndex= List.map (getChildren node) ~f:generateIndex in
+      let name= Node.getName node
+      and attrs= DocTree.getAttrs node
+      and childrenIndex= List.map (DocTree.getChildren node) ~f:generateIndex in
       let index= List.fold childrenIndex
         ~init:{byType= String.Map.empty; byAttr= String.Map.empty}
         ~f:(fun acc index->
@@ -1206,7 +1212,7 @@ module Tree = struct
       >>| (List.filter
         ~f:(fun node->
           Option.value
-            (let attrs= getAttrs node in
+            (let attrs= DocTree.getAttrs node in
             String.Map.find attrs attr >>| ((=) _value))
             ~default:false))
       |> value ~default:[]
