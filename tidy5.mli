@@ -588,6 +588,17 @@ type opt
 
 val string_of_opt : opt -> string
 
+val create : unit -> doc
+val parseFile : doc -> string -> unit
+val parseString : doc -> string -> unit
+
+val cleanAndRepair: doc -> unit
+val reportDoctype: doc -> unit
+val runDiagnostics: doc -> unit
+
+val saveFile : doc -> string -> unit
+val saveString : doc -> string option
+
 module Config :
   sig
     val getOption : doc -> optionId -> opt
@@ -780,48 +791,42 @@ module Config :
     val setAnchorAsName : doc -> bool -> unit
   end
 
-val create : unit -> doc
-val parseFile : doc -> string -> unit
-val parseString : doc -> string -> unit
+module Attr :
+  sig
+    val attrGetId : attr -> attrId
+    val attrIsEvent : attr -> bool
+    val attrIsProp : attr -> bool
+    val attrGetById : node -> attrId -> attr option
+  end
 
-val cleanAndRepair: doc -> unit
-val reportDoctype: doc -> unit
-val runDiagnostics: doc -> unit
+module DocTree :
+  sig
+    val getRoot : doc -> node
+    val getHtml : doc -> node
+    val getHead : doc -> node
+    val getBody : doc -> node
+    val getParent : node -> node option
+    val getChildren : node -> node list
+    val getAttrs : node -> string Core_kernel.Std.String.Map.t
+  end
 
-val saveFile : doc -> string -> unit
-val saveString : doc -> string option
-
-val docGetRoot : doc -> node
-val docGetHtml : doc -> node
-val docGetHead : doc -> node
-val docGetBody : doc -> node
-
-val attrGetId : attr -> attrId
-val attrIsEvent : attr -> bool
-val attrIsProp : attr -> bool
-
-val attrGetById : node -> attrId -> attr option
-
-val getParent : node -> node option
-val getChildren : node -> node list
-val getAttrs : node -> string Core_kernel.Std.String.Map.t
-val getType : node -> nodeType
-val getName : node -> string
-
-val isText : node -> bool
-val isProp : node -> bool
-val isHeader : node -> bool
-
-val hasText : node -> bool
-val getId : node -> tagId
-val getValue : node -> string option
-val getValue_exn : node -> string
-val getText : node -> string option
-val getText_exn : node -> string
-val line : node -> int
-val column : node -> int
-
-val extractText : node -> string list
+module Node :
+  sig
+    val getType : node -> nodeType
+    val getName : node -> string
+    val isText : node -> bool
+    val isProp : node -> bool
+    val isHeader : node -> bool
+    val hasText : node -> bool
+    val getValue : node -> string option
+    val getValue_exn : node -> string
+    val getId : node -> tagId
+    val getText : node -> string option
+    val getText_exn : node -> string
+    val line : node -> int
+    val column : node -> int
+    val extractText : node -> string Core_kernel.Std.List.t
+  end
 
 module Tree :
   sig
