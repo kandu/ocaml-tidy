@@ -60,9 +60,6 @@ CAMLprim value tidyCreate_stub(value unit) {
     CAMLlocal1(result);
     result= caml_alloc_custom(&doc_ops, sizeof(TidyDoc), 0,0);
     TidyDoc doc= tidyCreate();
-    tidyOptSetBool(doc, TidyQuiet, 1);
-    tidyOptSetBool(doc, TidyShowWarnings, 0);
-    tidyOptSetValue(doc, TidyCharEncoding, "utf8");
     doc_val(result)= doc;
     CAMLreturn(result);
 }
