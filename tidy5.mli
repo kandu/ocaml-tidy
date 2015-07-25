@@ -590,15 +590,6 @@ val string_of_opt : opt -> string
 
 module Config :
   sig
-    val blockTags : doc -> Core_kernel.Std.String.t list -> unit
-    type t =
-        BlockTags of string list
-      | Encoding of string
-      | InEncoding of string
-      | OutEncoding of string
-      | DropEmptyParas of bool
-      | DropEmptyElems of bool
-    val apply : t Core_kernel.Std.List.t -> doc -> unit
     val getOption : doc -> optionId -> opt
     val setOption : doc -> optionId -> opt -> unit
     val getIndentSpaces : doc -> int
@@ -759,14 +750,14 @@ module Config :
     val setReplaceColor : doc -> bool -> unit
     val getCssPrefix : doc -> string
     val setCssPrefix : doc -> string -> unit
-    val getNewInlineTags : doc -> string
-    val setNewInlineTags : doc -> string -> unit
-    val getNewBlocklevelTags : doc -> string
-    val setNewBlocklevelTags : doc -> string -> unit
-    val getNewEmptyTags : doc -> string
-    val setNewEmptyTags : doc -> string -> unit
-    val getNewPreTags : doc -> string
-    val setNewPreTags : doc -> string -> unit
+    val getNewInlineTags : doc -> string list
+    val setNewInlineTags : doc -> string list -> unit
+    val getNewBlocklevelTags : doc -> string list
+    val setNewBlocklevelTags : doc -> string list -> unit
+    val getNewEmptyTags : doc -> string list
+    val setNewEmptyTags : doc -> string list -> unit
+    val getNewPreTags : doc -> string list
+    val setNewPreTags : doc -> string list -> unit
     val getAccessibilityCheck : doc -> int
     val setAccessibilityCheck : doc -> int -> unit
     val getVerticalSpace : doc -> bool
@@ -789,8 +780,9 @@ module Config :
     val setAnchorAsName : doc -> bool -> unit
   end
 
-val parseFile : Config.t list -> string -> doc
-val parseString : Config.t list -> string -> doc
+val create : unit -> doc
+val parseFile : doc -> string -> unit
+val parseString : doc -> string -> unit
 
 val cleanAndRepair: doc -> unit
 val reportDoctype: doc -> unit
