@@ -583,6 +583,11 @@ type optionId=
   | TidyPPrintTabs  (* Indent using tabs istead of spaces. *)
   | N_TIDY_OPTIONS  (* Must be last.  *)
 
+type opt=
+  | Str of string
+  | Int of int
+  | Bool of bool
+
 module Stub = struct
   type doc
   type node
@@ -690,11 +695,6 @@ type attr= {
   attr: Stub.attr;
 }
 
-type opt=
-  | Str of string
-  | Int of int
-  | Bool of bool
-
 let string_of_opt opt=
   match opt with
   | Str v-> sprintf "%s:string" v
@@ -712,39 +712,6 @@ let opt_int= function
 let opt_bool= function
   | Bool s-> s
   | _-> failwith "boolean option expected"
-
-let getOption doc optId=
-  match Stub.getOption doc optId |> Stub.optGetType with
-  | Stub.String-> Str (Stub.optGetValue doc optId)
-  | Stub.Integer-> Int (Stub.optGetInt doc optId)
-  | Stub.Boolean-> Bool (Stub.optGetBool doc optId)
-
-let setOption doc optId value=
-  let opt= Stub.getOption doc optId in
-  let name= Stub.optGetName opt
-  and optType= Stub.optGetType opt in
-  match optType with
-  | Stub.String->
-    (match value with
-    | Str v-> Stub.optSetValue doc optId v
-    | _-> failwith (sprintf
-      "%s requires a string parameter, but a %s is encounted"
-      name
-      (Stub.string_of_optionType optType)))
-  | Stub.Integer->
-    (match value with
-    | Int v-> Stub.optSetInt doc optId v
-    | _-> failwith (sprintf
-      "%s requires a int parameter, but a %s is encounted"
-      name
-      (Stub.string_of_optionType optType)))
-  | Stub.Boolean->
-    (match value with
-    | Bool v-> Stub.optSetBool doc optId v
-    | _-> failwith (sprintf
-      "%s requires a bool parameter, but a %s is encounted"
-      name
-      (Stub.string_of_optionType optType)))
 
 module Config = struct
   let blockTags doc tags=
@@ -768,285 +735,317 @@ module Config = struct
       | DropEmptyElems ifDrop-> Stub.setDropEmptyElems doc ifDrop |> ignore
       )
 
+  let getOption doc optId=
+    match Stub.getOption doc optId |> Stub.optGetType with
+    | Stub.String-> Str (Stub.optGetValue doc optId)
+    | Stub.Integer-> Int (Stub.optGetInt doc optId)
+    | Stub.Boolean-> Bool (Stub.optGetBool doc optId)
+
+  let setOption doc optId value=
+    let opt= Stub.getOption doc optId in
+    let name= Stub.optGetName opt
+    and optType= Stub.optGetType opt in
+    match optType with
+    | Stub.String->
+      (match value with
+      | Str v-> Stub.optSetValue doc optId v
+      | _-> failwith (sprintf
+        "%s requires a string parameter, but a %s is encounted"
+        name
+        (Stub.string_of_optionType optType)))
+    | Stub.Integer->
+      (match value with
+      | Int v-> Stub.optSetInt doc optId v
+      | _-> failwith (sprintf
+        "%s requires a int parameter, but a %s is encounted"
+        name
+        (Stub.string_of_optionType optType)))
+    | Stub.Boolean->
+      (match value with
+      | Bool v-> Stub.optSetBool doc optId v
+      | _-> failwith (sprintf
+        "%s requires a bool parameter, but a %s is encounted"
+        name
+        (Stub.string_of_optionType optType)))
 
-    let getIndentSpaces doc= getOption doc TidyIndentSpaces |> opt_int
-    let setIndentSpaces doc opt= setOption doc TidyIndentSpaces (Int opt)
+  let getIndentSpaces doc= getOption doc TidyIndentSpaces |> opt_int
+  let setIndentSpaces doc opt= setOption doc TidyIndentSpaces (Int opt)
 
-    let getWrap doc= getOption doc TidyWrapLen |> opt_int
-    let setWrap doc opt= setOption doc TidyWrapLen (Int opt)
+  let getWrap doc= getOption doc TidyWrapLen |> opt_int
+  let setWrap doc opt= setOption doc TidyWrapLen (Int opt)
 
-    let getTabSize doc= getOption doc TidyTabSize |> opt_int
-    let setTabSize doc opt= setOption doc TidyTabSize (Int opt)
+  let getTabSize doc= getOption doc TidyTabSize |> opt_int
+  let setTabSize doc opt= setOption doc TidyTabSize (Int opt)
 
-    let getCharEncoding doc= getOption doc TidyCharEncoding |> opt_int
-    let setCharEncoding doc opt= setOption doc TidyCharEncoding (Int opt)
+  let getCharEncoding doc= getOption doc TidyCharEncoding |> opt_int
+  let setCharEncoding doc opt= setOption doc TidyCharEncoding (Int opt)
 
-    let getInputEncoding doc= getOption doc TidyInCharEncoding |> opt_int
-    let setInputEncoding doc opt= setOption doc TidyInCharEncoding (Int opt)
+  let getInputEncoding doc= getOption doc TidyInCharEncoding |> opt_int
+  let setInputEncoding doc opt= setOption doc TidyInCharEncoding (Int opt)
 
-    let getOutputEncoding doc= getOption doc TidyOutCharEncoding |> opt_int
-    let setOutputEncoding doc opt= setOption doc TidyOutCharEncoding (Int opt)
+  let getOutputEncoding doc= getOption doc TidyOutCharEncoding |> opt_int
+  let setOutputEncoding doc opt= setOption doc TidyOutCharEncoding (Int opt)
 
-    let getNewline doc= getOption doc TidyNewline |> opt_int
-    let setNewline doc opt= setOption doc TidyNewline (Int opt)
+  let getNewline doc= getOption doc TidyNewline |> opt_int
+  let setNewline doc opt= setOption doc TidyNewline (Int opt)
 
-    let getDoctypeMode doc= getOption doc TidyDoctypeMode |> opt_int
-    let setDoctypeMode doc opt= setOption doc TidyDoctypeMode (Int opt)
+  let getDoctypeMode doc= getOption doc TidyDoctypeMode |> opt_int
+  let setDoctypeMode doc opt= setOption doc TidyDoctypeMode (Int opt)
 
-    let getDoctype doc= getOption doc TidyDoctype |> opt_str
-    let setDoctype doc opt= setOption doc TidyDoctype (Str opt)
+  let getDoctype doc= getOption doc TidyDoctype |> opt_str
+  let setDoctype doc opt= setOption doc TidyDoctype (Str opt)
 
-    let getRepeatedAttributes doc= getOption doc TidyDuplicateAttrs |> opt_int
-    let setRepeatedAttributes doc opt= setOption doc TidyDuplicateAttrs (Int opt)
+  let getRepeatedAttributes doc= getOption doc TidyDuplicateAttrs |> opt_int
+  let setRepeatedAttributes doc opt= setOption doc TidyDuplicateAttrs (Int opt)
 
-    let getAltText doc= getOption doc TidyAltText |> opt_str
-    let setAltText doc opt= setOption doc TidyAltText (Str opt)
+  let getAltText doc= getOption doc TidyAltText |> opt_str
+  let setAltText doc opt= setOption doc TidyAltText (Str opt)
 
-    let getSlideStyle doc= getOption doc TidySlideStyle |> opt_str
-    let setSlideStyle doc opt= setOption doc TidySlideStyle (Str opt)
+  let getSlideStyle doc= getOption doc TidySlideStyle |> opt_str
+  let setSlideStyle doc opt= setOption doc TidySlideStyle (Str opt)
 
-    let getErrorFile doc= getOption doc TidyErrFile |> opt_str
-    let setErrorFile doc opt= setOption doc TidyErrFile (Str opt)
+  let getErrorFile doc= getOption doc TidyErrFile |> opt_str
+  let setErrorFile doc opt= setOption doc TidyErrFile (Str opt)
 
-    let getOutputFile doc= getOption doc TidyOutFile |> opt_str
-    let setOutputFile doc opt= setOption doc TidyOutFile (Str opt)
+  let getOutputFile doc= getOption doc TidyOutFile |> opt_str
+  let setOutputFile doc opt= setOption doc TidyOutFile (Str opt)
 
-    let getWriteBack doc= getOption doc TidyWriteBack |> opt_bool
-    let setWriteBack doc opt= setOption doc TidyWriteBack (Bool opt)
+  let getWriteBack doc= getOption doc TidyWriteBack |> opt_bool
+  let setWriteBack doc opt= setOption doc TidyWriteBack (Bool opt)
 
-    let getMarkup doc= getOption doc TidyShowMarkup |> opt_bool
-    let setMarkup doc opt= setOption doc TidyShowMarkup (Bool opt)
+  let getMarkup doc= getOption doc TidyShowMarkup |> opt_bool
+  let setMarkup doc opt= setOption doc TidyShowMarkup (Bool opt)
 
-    let getShowInfo doc= getOption doc TidyShowInfo |> opt_bool
-    let setShowInfo doc opt= setOption doc TidyShowInfo (Bool opt)
+  let getShowInfo doc= getOption doc TidyShowInfo |> opt_bool
+  let setShowInfo doc opt= setOption doc TidyShowInfo (Bool opt)
 
-    let getShowWarnings doc= getOption doc TidyShowWarnings |> opt_bool
-    let setShowWarnings doc opt= setOption doc TidyShowWarnings (Bool opt)
+  let getShowWarnings doc= getOption doc TidyShowWarnings |> opt_bool
+  let setShowWarnings doc opt= setOption doc TidyShowWarnings (Bool opt)
 
-    let getQuiet doc= getOption doc TidyQuiet |> opt_bool
-    let setQuiet doc opt= setOption doc TidyQuiet (Bool opt)
+  let getQuiet doc= getOption doc TidyQuiet |> opt_bool
+  let setQuiet doc opt= setOption doc TidyQuiet (Bool opt)
 
-    let getIndent doc= getOption doc TidyIndentContent |> opt_int
-    let setIndent doc opt= setOption doc TidyIndentContent (Int opt)
+  let getIndent doc= getOption doc TidyIndentContent |> opt_int
+  let setIndent doc opt= setOption doc TidyIndentContent (Int opt)
 
-    let getCoerceEndtags doc= getOption doc TidyCoerceEndTags |> opt_bool
-    let setCoerceEndtags doc opt= setOption doc TidyCoerceEndTags (Bool opt)
+  let getCoerceEndtags doc= getOption doc TidyCoerceEndTags |> opt_bool
+  let setCoerceEndtags doc opt= setOption doc TidyCoerceEndTags (Bool opt)
 
-    let getOmitOptionalTags doc= getOption doc TidyOmitOptionalTags |> opt_bool
-    let setOmitOptionalTags doc opt= setOption doc TidyOmitOptionalTags (Bool opt)
+  let getOmitOptionalTags doc= getOption doc TidyOmitOptionalTags |> opt_bool
+  let setOmitOptionalTags doc opt= setOption doc TidyOmitOptionalTags (Bool opt)
 
-    let getHideEndtags doc= getOption doc TidyHideEndTags |> opt_bool
-    let setHideEndtags doc opt= setOption doc TidyHideEndTags (Bool opt)
+  let getHideEndtags doc= getOption doc TidyHideEndTags |> opt_bool
+  let setHideEndtags doc opt= setOption doc TidyHideEndTags (Bool opt)
 
-    let getInputXml doc= getOption doc TidyXmlTags |> opt_bool
-    let setInputXml doc opt= setOption doc TidyXmlTags (Bool opt)
+  let getInputXml doc= getOption doc TidyXmlTags |> opt_bool
+  let setInputXml doc opt= setOption doc TidyXmlTags (Bool opt)
 
-    let getOutputXml doc= getOption doc TidyXmlOut |> opt_bool
-    let setOutputXml doc opt= setOption doc TidyXmlOut (Bool opt)
+  let getOutputXml doc= getOption doc TidyXmlOut |> opt_bool
+  let setOutputXml doc opt= setOption doc TidyXmlOut (Bool opt)
 
-    let getOutputXhtml doc= getOption doc TidyXhtmlOut |> opt_bool
-    let setOutputXhtml doc opt= setOption doc TidyXhtmlOut (Bool opt)
+  let getOutputXhtml doc= getOption doc TidyXhtmlOut |> opt_bool
+  let setOutputXhtml doc opt= setOption doc TidyXhtmlOut (Bool opt)
 
-    let getOutputHtml doc= getOption doc TidyHtmlOut |> opt_bool
-    let setOutputHtml doc opt= setOption doc TidyHtmlOut (Bool opt)
+  let getOutputHtml doc= getOption doc TidyHtmlOut |> opt_bool
+  let setOutputHtml doc opt= setOption doc TidyHtmlOut (Bool opt)
 
-    let getAddXmlDecl doc= getOption doc TidyXmlDecl |> opt_bool
-    let setAddXmlDecl doc opt= setOption doc TidyXmlDecl (Bool opt)
+  let getAddXmlDecl doc= getOption doc TidyXmlDecl |> opt_bool
+  let setAddXmlDecl doc opt= setOption doc TidyXmlDecl (Bool opt)
 
-    let getUppercaseTags doc= getOption doc TidyUpperCaseTags |> opt_bool
-    let setUppercaseTags doc opt= setOption doc TidyUpperCaseTags (Bool opt)
+  let getUppercaseTags doc= getOption doc TidyUpperCaseTags |> opt_bool
+  let setUppercaseTags doc opt= setOption doc TidyUpperCaseTags (Bool opt)
 
-    let getUppercaseAttributes doc= getOption doc TidyUpperCaseAttrs |> opt_bool
-    let setUppercaseAttributes doc opt= setOption doc TidyUpperCaseAttrs (Bool opt)
+  let getUppercaseAttributes doc= getOption doc TidyUpperCaseAttrs |> opt_bool
+  let setUppercaseAttributes doc opt= setOption doc TidyUpperCaseAttrs (Bool opt)
 
-    let getBare doc= getOption doc TidyMakeBare |> opt_bool
-    let setBare doc opt= setOption doc TidyMakeBare (Bool opt)
+  let getBare doc= getOption doc TidyMakeBare |> opt_bool
+  let setBare doc opt= setOption doc TidyMakeBare (Bool opt)
 
-    let getClean doc= getOption doc TidyMakeClean |> opt_bool
-    let setClean doc opt= setOption doc TidyMakeClean (Bool opt)
+  let getClean doc= getOption doc TidyMakeClean |> opt_bool
+  let setClean doc opt= setOption doc TidyMakeClean (Bool opt)
 
-    let getGdoc doc= getOption doc TidyGDocClean |> opt_bool
-    let setGdoc doc opt= setOption doc TidyGDocClean (Bool opt)
+  let getGdoc doc= getOption doc TidyGDocClean |> opt_bool
+  let setGdoc doc opt= setOption doc TidyGDocClean (Bool opt)
 
-    let getLogicalEmphasis doc= getOption doc TidyLogicalEmphasis |> opt_bool
-    let setLogicalEmphasis doc opt= setOption doc TidyLogicalEmphasis (Bool opt)
+  let getLogicalEmphasis doc= getOption doc TidyLogicalEmphasis |> opt_bool
+  let setLogicalEmphasis doc opt= setOption doc TidyLogicalEmphasis (Bool opt)
 
-    let getDropProprietaryAttributes doc= getOption doc TidyDropPropAttrs |> opt_bool
-    let setDropProprietaryAttributes doc opt= setOption doc TidyDropPropAttrs (Bool opt)
+  let getDropProprietaryAttributes doc= getOption doc TidyDropPropAttrs |> opt_bool
+  let setDropProprietaryAttributes doc opt= setOption doc TidyDropPropAttrs (Bool opt)
 
-    let getDropFontTags doc= getOption doc TidyDropFontTags |> opt_bool
-    let setDropFontTags doc opt= setOption doc TidyDropFontTags (Bool opt)
+  let getDropFontTags doc= getOption doc TidyDropFontTags |> opt_bool
+  let setDropFontTags doc opt= setOption doc TidyDropFontTags (Bool opt)
 
-    let getDropEmptyElements doc= getOption doc TidyDropEmptyElems |> opt_bool
-    let setDropEmptyElements doc opt= setOption doc TidyDropEmptyElems (Bool opt)
+  let getDropEmptyElements doc= getOption doc TidyDropEmptyElems |> opt_bool
+  let setDropEmptyElements doc opt= setOption doc TidyDropEmptyElems (Bool opt)
 
-    let getDropEmptyParas doc= getOption doc TidyDropEmptyParas |> opt_bool
-    let setDropEmptyParas doc opt= setOption doc TidyDropEmptyParas (Bool opt)
+  let getDropEmptyParas doc= getOption doc TidyDropEmptyParas |> opt_bool
+  let setDropEmptyParas doc opt= setOption doc TidyDropEmptyParas (Bool opt)
 
-    let getFixBadComments doc= getOption doc TidyFixComments |> opt_bool
-    let setFixBadComments doc opt= setOption doc TidyFixComments (Bool opt)
+  let getFixBadComments doc= getOption doc TidyFixComments |> opt_bool
+  let setFixBadComments doc opt= setOption doc TidyFixComments (Bool opt)
 
-    let getBreakBeforeBr doc= getOption doc TidyBreakBeforeBR |> opt_bool
-    let setBreakBeforeBr doc opt= setOption doc TidyBreakBeforeBR (Bool opt)
+  let getBreakBeforeBr doc= getOption doc TidyBreakBeforeBR |> opt_bool
+  let setBreakBeforeBr doc opt= setOption doc TidyBreakBeforeBR (Bool opt)
 
-    let getSplit doc= getOption doc TidyBurstSlides |> opt_bool
-    let setSplit doc opt= setOption doc TidyBurstSlides (Bool opt)
+  let getSplit doc= getOption doc TidyBurstSlides |> opt_bool
+  let setSplit doc opt= setOption doc TidyBurstSlides (Bool opt)
 
-    let getNumericEntities doc= getOption doc TidyNumEntities |> opt_bool
-    let setNumericEntities doc opt= setOption doc TidyNumEntities (Bool opt)
+  let getNumericEntities doc= getOption doc TidyNumEntities |> opt_bool
+  let setNumericEntities doc opt= setOption doc TidyNumEntities (Bool opt)
 
-    let getQuoteMarks doc= getOption doc TidyQuoteMarks |> opt_bool
-    let setQuoteMarks doc opt= setOption doc TidyQuoteMarks (Bool opt)
+  let getQuoteMarks doc= getOption doc TidyQuoteMarks |> opt_bool
+  let setQuoteMarks doc opt= setOption doc TidyQuoteMarks (Bool opt)
 
-    let getQuoteNbsp doc= getOption doc TidyQuoteNbsp |> opt_bool
-    let setQuoteNbsp doc opt= setOption doc TidyQuoteNbsp (Bool opt)
+  let getQuoteNbsp doc= getOption doc TidyQuoteNbsp |> opt_bool
+  let setQuoteNbsp doc opt= setOption doc TidyQuoteNbsp (Bool opt)
 
-    let getQuoteAmpersand doc= getOption doc TidyQuoteAmpersand |> opt_bool
-    let setQuoteAmpersand doc opt= setOption doc TidyQuoteAmpersand (Bool opt)
+  let getQuoteAmpersand doc= getOption doc TidyQuoteAmpersand |> opt_bool
+  let setQuoteAmpersand doc opt= setOption doc TidyQuoteAmpersand (Bool opt)
 
-    let getWrapAttributes doc= getOption doc TidyWrapAttVals |> opt_bool
-    let setWrapAttributes doc opt= setOption doc TidyWrapAttVals (Bool opt)
+  let getWrapAttributes doc= getOption doc TidyWrapAttVals |> opt_bool
+  let setWrapAttributes doc opt= setOption doc TidyWrapAttVals (Bool opt)
 
-    let getWrapScriptLiterals doc= getOption doc TidyWrapScriptlets |> opt_bool
-    let setWrapScriptLiterals doc opt= setOption doc TidyWrapScriptlets (Bool opt)
+  let getWrapScriptLiterals doc= getOption doc TidyWrapScriptlets |> opt_bool
+  let setWrapScriptLiterals doc opt= setOption doc TidyWrapScriptlets (Bool opt)
 
-    let getWrapSections doc= getOption doc TidyWrapSection |> opt_bool
-    let setWrapSections doc opt= setOption doc TidyWrapSection (Bool opt)
+  let getWrapSections doc= getOption doc TidyWrapSection |> opt_bool
+  let setWrapSections doc opt= setOption doc TidyWrapSection (Bool opt)
 
-    let getWrapAsp doc= getOption doc TidyWrapAsp |> opt_bool
-    let setWrapAsp doc opt= setOption doc TidyWrapAsp (Bool opt)
+  let getWrapAsp doc= getOption doc TidyWrapAsp |> opt_bool
+  let setWrapAsp doc opt= setOption doc TidyWrapAsp (Bool opt)
 
-    let getWrapJste doc= getOption doc TidyWrapJste |> opt_bool
-    let setWrapJste doc opt= setOption doc TidyWrapJste (Bool opt)
+  let getWrapJste doc= getOption doc TidyWrapJste |> opt_bool
+  let setWrapJste doc opt= setOption doc TidyWrapJste (Bool opt)
 
-    let getWrapPhp doc= getOption doc TidyWrapPhp |> opt_bool
-    let setWrapPhp doc opt= setOption doc TidyWrapPhp (Bool opt)
+  let getWrapPhp doc= getOption doc TidyWrapPhp |> opt_bool
+  let setWrapPhp doc opt= setOption doc TidyWrapPhp (Bool opt)
 
-    let getFixBackslash doc= getOption doc TidyFixBackslash |> opt_bool
-    let setFixBackslash doc opt= setOption doc TidyFixBackslash (Bool opt)
+  let getFixBackslash doc= getOption doc TidyFixBackslash |> opt_bool
+  let setFixBackslash doc opt= setOption doc TidyFixBackslash (Bool opt)
 
-    let getIndentAttributes doc= getOption doc TidyIndentAttributes |> opt_bool
-    let setIndentAttributes doc opt= setOption doc TidyIndentAttributes (Bool opt)
+  let getIndentAttributes doc= getOption doc TidyIndentAttributes |> opt_bool
+  let setIndentAttributes doc opt= setOption doc TidyIndentAttributes (Bool opt)
 
-    let getAssumeXmlProcins doc= getOption doc TidyXmlPIs |> opt_bool
-    let setAssumeXmlProcins doc opt= setOption doc TidyXmlPIs (Bool opt)
+  let getAssumeXmlProcins doc= getOption doc TidyXmlPIs |> opt_bool
+  let setAssumeXmlProcins doc opt= setOption doc TidyXmlPIs (Bool opt)
 
-    let getAddXmlSpace doc= getOption doc TidyXmlSpace |> opt_bool
-    let setAddXmlSpace doc opt= setOption doc TidyXmlSpace (Bool opt)
+  let getAddXmlSpace doc= getOption doc TidyXmlSpace |> opt_bool
+  let setAddXmlSpace doc opt= setOption doc TidyXmlSpace (Bool opt)
 
-    let getEncloseText doc= getOption doc TidyEncloseBodyText |> opt_bool
-    let setEncloseText doc opt= setOption doc TidyEncloseBodyText (Bool opt)
+  let getEncloseText doc= getOption doc TidyEncloseBodyText |> opt_bool
+  let setEncloseText doc opt= setOption doc TidyEncloseBodyText (Bool opt)
 
-    let getEncloseBlockText doc= getOption doc TidyEncloseBlockText |> opt_bool
-    let setEncloseBlockText doc opt= setOption doc TidyEncloseBlockText (Bool opt)
+  let getEncloseBlockText doc= getOption doc TidyEncloseBlockText |> opt_bool
+  let setEncloseBlockText doc opt= setOption doc TidyEncloseBlockText (Bool opt)
 
-    let getKeepTime doc= getOption doc TidyKeepFileTimes |> opt_bool
-    let setKeepTime doc opt= setOption doc TidyKeepFileTimes (Bool opt)
+  let getKeepTime doc= getOption doc TidyKeepFileTimes |> opt_bool
+  let setKeepTime doc opt= setOption doc TidyKeepFileTimes (Bool opt)
 
-    let getWord2000 doc= getOption doc TidyWord2000 |> opt_bool
-    let setWord2000 doc opt= setOption doc TidyWord2000 (Bool opt)
+  let getWord2000 doc= getOption doc TidyWord2000 |> opt_bool
+  let setWord2000 doc opt= setOption doc TidyWord2000 (Bool opt)
 
-    let getTidyMark doc= getOption doc TidyMark |> opt_bool
-    let setTidyMark doc opt= setOption doc TidyMark (Bool opt)
+  let getTidyMark doc= getOption doc TidyMark |> opt_bool
+  let setTidyMark doc opt= setOption doc TidyMark (Bool opt)
 
-    let getGnuEmacs doc= getOption doc TidyEmacs |> opt_bool
-    let setGnuEmacs doc opt= setOption doc TidyEmacs (Bool opt)
+  let getGnuEmacs doc= getOption doc TidyEmacs |> opt_bool
+  let setGnuEmacs doc opt= setOption doc TidyEmacs (Bool opt)
 
-    let getGnuEmacsFile doc= getOption doc TidyEmacsFile |> opt_str
-    let setGnuEmacsFile doc opt= setOption doc TidyEmacsFile (Str opt)
+  let getGnuEmacsFile doc= getOption doc TidyEmacsFile |> opt_str
+  let setGnuEmacsFile doc opt= setOption doc TidyEmacsFile (Str opt)
 
-    let getLiteralAttributes doc= getOption doc TidyLiteralAttribs |> opt_bool
-    let setLiteralAttributes doc opt= setOption doc TidyLiteralAttribs (Bool opt)
+  let getLiteralAttributes doc= getOption doc TidyLiteralAttribs |> opt_bool
+  let setLiteralAttributes doc opt= setOption doc TidyLiteralAttribs (Bool opt)
 
-    let getShowBodyOnly doc= getOption doc TidyBodyOnly |> opt_int
-    let setShowBodyOnly doc opt= setOption doc TidyBodyOnly (Int opt)
+  let getShowBodyOnly doc= getOption doc TidyBodyOnly |> opt_int
+  let setShowBodyOnly doc opt= setOption doc TidyBodyOnly (Int opt)
 
-    let getFixUri doc= getOption doc TidyFixUri |> opt_bool
-    let setFixUri doc opt= setOption doc TidyFixUri (Bool opt)
+  let getFixUri doc= getOption doc TidyFixUri |> opt_bool
+  let setFixUri doc opt= setOption doc TidyFixUri (Bool opt)
 
-    let getLowerLiterals doc= getOption doc TidyLowerLiterals |> opt_bool
-    let setLowerLiterals doc opt= setOption doc TidyLowerLiterals (Bool opt)
+  let getLowerLiterals doc= getOption doc TidyLowerLiterals |> opt_bool
+  let setLowerLiterals doc opt= setOption doc TidyLowerLiterals (Bool opt)
 
-    let getHideComments doc= getOption doc TidyBodyOnly |> opt_bool
-    let setHideComments doc opt= setOption doc TidyBodyOnly (Bool opt)
+  let getHideComments doc= getOption doc TidyBodyOnly |> opt_bool
+  let setHideComments doc opt= setOption doc TidyBodyOnly (Bool opt)
 
-    let getIndentCdata doc= getOption doc TidyIndentCdata |> opt_bool
-    let setIndentCdata doc opt= setOption doc TidyIndentCdata (Bool opt)
+  let getIndentCdata doc= getOption doc TidyIndentCdata |> opt_bool
+  let setIndentCdata doc opt= setOption doc TidyIndentCdata (Bool opt)
 
-    let getForceOutput doc= getOption doc TidyForceOutput |> opt_bool
-    let setForceOutput doc opt= setOption doc TidyForceOutput (Bool opt)
+  let getForceOutput doc= getOption doc TidyForceOutput |> opt_bool
+  let setForceOutput doc opt= setOption doc TidyForceOutput (Bool opt)
 
-    let getShowErrors doc= getOption doc TidyShowErrors |> opt_int
-    let setShowErrors doc opt= setOption doc TidyShowErrors (Int opt)
+  let getShowErrors doc= getOption doc TidyShowErrors |> opt_int
+  let setShowErrors doc opt= setOption doc TidyShowErrors (Int opt)
 
-    let getAsciiChars doc= getOption doc TidyAsciiChars |> opt_bool
-    let setAsciiChars doc opt= setOption doc TidyAsciiChars (Bool opt)
+  let getAsciiChars doc= getOption doc TidyAsciiChars |> opt_bool
+  let setAsciiChars doc opt= setOption doc TidyAsciiChars (Bool opt)
 
-    let getJoinClasses doc= getOption doc TidyJoinClasses |> opt_bool
-    let setJoinClasses doc opt= setOption doc TidyJoinClasses (Bool opt)
+  let getJoinClasses doc= getOption doc TidyJoinClasses |> opt_bool
+  let setJoinClasses doc opt= setOption doc TidyJoinClasses (Bool opt)
 
-    let getJoinStyles doc= getOption doc TidyJoinStyles |> opt_bool
-    let setJoinStyles doc opt= setOption doc TidyJoinStyles (Bool opt)
+  let getJoinStyles doc= getOption doc TidyJoinStyles |> opt_bool
+  let setJoinStyles doc opt= setOption doc TidyJoinStyles (Bool opt)
 
-    let getEscapeCdata doc= getOption doc TidyEscapeCdata |> opt_bool
-    let setEscapeCdata doc opt= setOption doc TidyEscapeCdata (Bool opt)
+  let getEscapeCdata doc= getOption doc TidyEscapeCdata |> opt_bool
+  let setEscapeCdata doc opt= setOption doc TidyEscapeCdata (Bool opt)
 
-    let getLanguage doc= getOption doc TidyLanguage |> opt_str
-    let setLanguage doc opt= setOption doc TidyLanguage (Str opt)
+  let getLanguage doc= getOption doc TidyLanguage |> opt_str
+  let setLanguage doc opt= setOption doc TidyLanguage (Str opt)
 
-    let getNcr doc= getOption doc TidyNCR |> opt_bool
-    let setNcr doc opt= setOption doc TidyNCR (Bool opt)
+  let getNcr doc= getOption doc TidyNCR |> opt_bool
+  let setNcr doc opt= setOption doc TidyNCR (Bool opt)
 
-    let getOutputBom doc= getOption doc TidyOutputBOM |> opt_int
-    let setOutputBom doc opt= setOption doc TidyOutputBOM (Int opt)
+  let getOutputBom doc= getOption doc TidyOutputBOM |> opt_int
+  let setOutputBom doc opt= setOption doc TidyOutputBOM (Int opt)
 
-    let getReplaceColor doc= getOption doc TidyReplaceColor |> opt_bool
-    let setReplaceColor doc opt= setOption doc TidyReplaceColor (Bool opt)
+  let getReplaceColor doc= getOption doc TidyReplaceColor |> opt_bool
+  let setReplaceColor doc opt= setOption doc TidyReplaceColor (Bool opt)
 
-    let getCssPrefix doc= getOption doc TidyCSSPrefix |> opt_str
-    let setCssPrefix doc opt= setOption doc TidyCSSPrefix (Str opt)
+  let getCssPrefix doc= getOption doc TidyCSSPrefix |> opt_str
+  let setCssPrefix doc opt= setOption doc TidyCSSPrefix (Str opt)
 
-    let getNewInlineTags doc= getOption doc TidyInlineTags |> opt_str
-    let setNewInlineTags doc opt= setOption doc TidyInlineTags (Str opt)
+  let getNewInlineTags doc= getOption doc TidyInlineTags |> opt_str
+  let setNewInlineTags doc opt= setOption doc TidyInlineTags (Str opt)
 
-    let getNewBlocklevelTags doc= getOption doc TidyBlockTags |> opt_str
-    let setNewBlocklevelTags doc opt= setOption doc TidyBlockTags (Str opt)
+  let getNewBlocklevelTags doc= getOption doc TidyBlockTags |> opt_str
+  let setNewBlocklevelTags doc opt= setOption doc TidyBlockTags (Str opt)
 
-    let getNewEmptyTags doc= getOption doc TidyEmptyTags |> opt_str
-    let setNewEmptyTags doc opt= setOption doc TidyEmptyTags (Str opt)
+  let getNewEmptyTags doc= getOption doc TidyEmptyTags |> opt_str
+  let setNewEmptyTags doc opt= setOption doc TidyEmptyTags (Str opt)
 
-    let getNewPreTags doc= getOption doc TidyPreTags |> opt_str
-    let setNewPreTags doc opt= setOption doc TidyPreTags (Str opt)
+  let getNewPreTags doc= getOption doc TidyPreTags |> opt_str
+  let setNewPreTags doc opt= setOption doc TidyPreTags (Str opt)
 
-    let getAccessibilityCheck doc= getOption doc TidyAccessibilityCheckLevel |> opt_int
-    let setAccessibilityCheck doc opt= setOption doc TidyAccessibilityCheckLevel (Int opt)
+  let getAccessibilityCheck doc= getOption doc TidyAccessibilityCheckLevel |> opt_int
+  let setAccessibilityCheck doc opt= setOption doc TidyAccessibilityCheckLevel (Int opt)
 
-    let getVerticalSpace doc= getOption doc TidyVertSpace |> opt_bool
-    let setVerticalSpace doc opt= setOption doc TidyVertSpace (Bool opt)
+  let getVerticalSpace doc= getOption doc TidyVertSpace |> opt_bool
+  let setVerticalSpace doc opt= setOption doc TidyVertSpace (Bool opt)
 
-    let getPunctuationWrap doc= getOption doc TidyPunctWrap |> opt_bool
-    let setPunctuationWrap doc opt= setOption doc TidyPunctWrap (Bool opt)
+  let getPunctuationWrap doc= getOption doc TidyPunctWrap |> opt_bool
+  let setPunctuationWrap doc opt= setOption doc TidyPunctWrap (Bool opt)
 
-    let getMergeEmphasis doc= getOption doc TidyMergeEmphasis |> opt_bool
-    let setMergeEmphasis doc opt= setOption doc TidyMergeEmphasis (Bool opt)
+  let getMergeEmphasis doc= getOption doc TidyMergeEmphasis |> opt_bool
+  let setMergeEmphasis doc opt= setOption doc TidyMergeEmphasis (Bool opt)
 
-    let getMergeDivs doc= getOption doc TidyMergeDivs |> opt_int
-    let setMergeDivs doc opt= setOption doc TidyMergeDivs (Int opt)
+  let getMergeDivs doc= getOption doc TidyMergeDivs |> opt_int
+  let setMergeDivs doc opt= setOption doc TidyMergeDivs (Int opt)
 
-    let getDecorateInferredUl doc= getOption doc TidyDecorateInferredUL |> opt_bool
-    let setDecorateInferredUl doc opt= setOption doc TidyDecorateInferredUL (Bool opt)
+  let getDecorateInferredUl doc= getOption doc TidyDecorateInferredUL |> opt_bool
+  let setDecorateInferredUl doc opt= setOption doc TidyDecorateInferredUL (Bool opt)
 
-    let getPreserveEntities doc= getOption doc TidyPreserveEntities |> opt_bool
-    let setPreserveEntities doc opt= setOption doc TidyPreserveEntities (Bool opt)
+  let getPreserveEntities doc= getOption doc TidyPreserveEntities |> opt_bool
+  let setPreserveEntities doc opt= setOption doc TidyPreserveEntities (Bool opt)
 
-    let getSortAttributes doc= getOption doc TidySortAttributes |> opt_int
-    let setSortAttributes doc opt= setOption doc TidySortAttributes (Int opt)
+  let getSortAttributes doc= getOption doc TidySortAttributes |> opt_int
+  let setSortAttributes doc opt= setOption doc TidySortAttributes (Int opt)
 
-    let getMergeSpans doc= getOption doc TidyMergeSpans |> opt_int
-    let setMergeSpans doc opt= setOption doc TidyMergeSpans (Int opt)
+  let getMergeSpans doc= getOption doc TidyMergeSpans |> opt_int
+  let setMergeSpans doc opt= setOption doc TidyMergeSpans (Int opt)
 
-    let getAnchorAsName doc= getOption doc TidyAnchorAsName |> opt_bool
-    let setAnchorAsName doc opt= setOption doc TidyAnchorAsName (Bool opt)
+  let getAnchorAsName doc= getOption doc TidyAnchorAsName |> opt_bool
+  let setAnchorAsName doc opt= setOption doc TidyAnchorAsName (Bool opt)
 end
 
 let parseFile config filePath=
