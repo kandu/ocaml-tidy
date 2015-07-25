@@ -590,16 +590,201 @@ val string_of_opt : opt -> string
 
 module Config :
   sig
-    val blockTags : doc -> string list -> unit
-
+    val blockTags : doc -> Core_kernel.Std.String.t list -> unit
     type t =
-      | BlockTags of string list
+        BlockTags of string list
       | Encoding of string
       | InEncoding of string
       | OutEncoding of string
       | DropEmptyParas of bool
       | DropEmptyElems of bool
-    val apply : t list -> doc -> unit
+    val apply : t Core_kernel.Std.List.t -> doc -> unit
+    val getIndentSpaces : doc -> int
+    val setIndentSpaces : doc -> int -> unit
+    val getWrap : doc -> int
+    val setWrap : doc -> int -> unit
+    val getTabSize : doc -> int
+    val setTabSize : doc -> int -> unit
+    val getCharEncoding : doc -> int
+    val setCharEncoding : doc -> int -> unit
+    val getInputEncoding : doc -> int
+    val setInputEncoding : doc -> int -> unit
+    val getOutputEncoding : doc -> int
+    val setOutputEncoding : doc -> int -> unit
+    val getNewline : doc -> int
+    val setNewline : doc -> int -> unit
+    val getDoctypeMode : doc -> int
+    val setDoctypeMode : doc -> int -> unit
+    val getDoctype : doc -> string
+    val setDoctype : doc -> string -> unit
+    val getRepeatedAttributes : doc -> int
+    val setRepeatedAttributes : doc -> int -> unit
+    val getAltText : doc -> string
+    val setAltText : doc -> string -> unit
+    val getSlideStyle : doc -> string
+    val setSlideStyle : doc -> string -> unit
+    val getErrorFile : doc -> string
+    val setErrorFile : doc -> string -> unit
+    val getOutputFile : doc -> string
+    val setOutputFile : doc -> string -> unit
+    val getWriteBack : doc -> bool
+    val setWriteBack : doc -> bool -> unit
+    val getMarkup : doc -> bool
+    val setMarkup : doc -> bool -> unit
+    val getShowInfo : doc -> bool
+    val setShowInfo : doc -> bool -> unit
+    val getShowWarnings : doc -> bool
+    val setShowWarnings : doc -> bool -> unit
+    val getQuiet : doc -> bool
+    val setQuiet : doc -> bool -> unit
+    val getIndent : doc -> int
+    val setIndent : doc -> int -> unit
+    val getCoerceEndtags : doc -> bool
+    val setCoerceEndtags : doc -> bool -> unit
+    val getOmitOptionalTags : doc -> bool
+    val setOmitOptionalTags : doc -> bool -> unit
+    val getHideEndtags : doc -> bool
+    val setHideEndtags : doc -> bool -> unit
+    val getInputXml : doc -> bool
+    val setInputXml : doc -> bool -> unit
+    val getOutputXml : doc -> bool
+    val setOutputXml : doc -> bool -> unit
+    val getOutputXhtml : doc -> bool
+    val setOutputXhtml : doc -> bool -> unit
+    val getOutputHtml : doc -> bool
+    val setOutputHtml : doc -> bool -> unit
+    val getAddXmlDecl : doc -> bool
+    val setAddXmlDecl : doc -> bool -> unit
+    val getUppercaseTags : doc -> bool
+    val setUppercaseTags : doc -> bool -> unit
+    val getUppercaseAttributes : doc -> bool
+    val setUppercaseAttributes : doc -> bool -> unit
+    val getBare : doc -> bool
+    val setBare : doc -> bool -> unit
+    val getClean : doc -> bool
+    val setClean : doc -> bool -> unit
+    val getGdoc : doc -> bool
+    val setGdoc : doc -> bool -> unit
+    val getLogicalEmphasis : doc -> bool
+    val setLogicalEmphasis : doc -> bool -> unit
+    val getDropProprietaryAttributes : doc -> bool
+    val setDropProprietaryAttributes : doc -> bool -> unit
+    val getDropFontTags : doc -> bool
+    val setDropFontTags : doc -> bool -> unit
+    val getDropEmptyElements : doc -> bool
+    val setDropEmptyElements : doc -> bool -> unit
+    val getDropEmptyParas : doc -> bool
+    val setDropEmptyParas : doc -> bool -> unit
+    val getFixBadComments : doc -> bool
+    val setFixBadComments : doc -> bool -> unit
+    val getBreakBeforeBr : doc -> bool
+    val setBreakBeforeBr : doc -> bool -> unit
+    val getSplit : doc -> bool
+    val setSplit : doc -> bool -> unit
+    val getNumericEntities : doc -> bool
+    val setNumericEntities : doc -> bool -> unit
+    val getQuoteMarks : doc -> bool
+    val setQuoteMarks : doc -> bool -> unit
+    val getQuoteNbsp : doc -> bool
+    val setQuoteNbsp : doc -> bool -> unit
+    val getQuoteAmpersand : doc -> bool
+    val setQuoteAmpersand : doc -> bool -> unit
+    val getWrapAttributes : doc -> bool
+    val setWrapAttributes : doc -> bool -> unit
+    val getWrapScriptLiterals : doc -> bool
+    val setWrapScriptLiterals : doc -> bool -> unit
+    val getWrapSections : doc -> bool
+    val setWrapSections : doc -> bool -> unit
+    val getWrapAsp : doc -> bool
+    val setWrapAsp : doc -> bool -> unit
+    val getWrapJste : doc -> bool
+    val setWrapJste : doc -> bool -> unit
+    val getWrapPhp : doc -> bool
+    val setWrapPhp : doc -> bool -> unit
+    val getFixBackslash : doc -> bool
+    val setFixBackslash : doc -> bool -> unit
+    val getIndentAttributes : doc -> bool
+    val setIndentAttributes : doc -> bool -> unit
+    val getAssumeXmlProcins : doc -> bool
+    val setAssumeXmlProcins : doc -> bool -> unit
+    val getAddXmlSpace : doc -> bool
+    val setAddXmlSpace : doc -> bool -> unit
+    val getEncloseText : doc -> bool
+    val setEncloseText : doc -> bool -> unit
+    val getEncloseBlockText : doc -> bool
+    val setEncloseBlockText : doc -> bool -> unit
+    val getKeepTime : doc -> bool
+    val setKeepTime : doc -> bool -> unit
+    val getWord2000 : doc -> bool
+    val setWord2000 : doc -> bool -> unit
+    val getTidyMark : doc -> bool
+    val setTidyMark : doc -> bool -> unit
+    val getGnuEmacs : doc -> bool
+    val setGnuEmacs : doc -> bool -> unit
+    val getGnuEmacsFile : doc -> string
+    val setGnuEmacsFile : doc -> string -> unit
+    val getLiteralAttributes : doc -> bool
+    val setLiteralAttributes : doc -> bool -> unit
+    val getShowBodyOnly : doc -> int
+    val setShowBodyOnly : doc -> int -> unit
+    val getFixUri : doc -> bool
+    val setFixUri : doc -> bool -> unit
+    val getLowerLiterals : doc -> bool
+    val setLowerLiterals : doc -> bool -> unit
+    val getHideComments : doc -> bool
+    val setHideComments : doc -> bool -> unit
+    val getIndentCdata : doc -> bool
+    val setIndentCdata : doc -> bool -> unit
+    val getForceOutput : doc -> bool
+    val setForceOutput : doc -> bool -> unit
+    val getShowErrors : doc -> int
+    val setShowErrors : doc -> int -> unit
+    val getAsciiChars : doc -> bool
+    val setAsciiChars : doc -> bool -> unit
+    val getJoinClasses : doc -> bool
+    val setJoinClasses : doc -> bool -> unit
+    val getJoinStyles : doc -> bool
+    val setJoinStyles : doc -> bool -> unit
+    val getEscapeCdata : doc -> bool
+    val setEscapeCdata : doc -> bool -> unit
+    val getLanguage : doc -> string
+    val setLanguage : doc -> string -> unit
+    val getNcr : doc -> bool
+    val setNcr : doc -> bool -> unit
+    val getOutputBom : doc -> int
+    val setOutputBom : doc -> int -> unit
+    val getReplaceColor : doc -> bool
+    val setReplaceColor : doc -> bool -> unit
+    val getCssPrefix : doc -> string
+    val setCssPrefix : doc -> string -> unit
+    val getNewInlineTags : doc -> string
+    val setNewInlineTags : doc -> string -> unit
+    val getNewBlocklevelTags : doc -> string
+    val setNewBlocklevelTags : doc -> string -> unit
+    val getNewEmptyTags : doc -> string
+    val setNewEmptyTags : doc -> string -> unit
+    val getNewPreTags : doc -> string
+    val setNewPreTags : doc -> string -> unit
+    val getAccessibilityCheck : doc -> int
+    val setAccessibilityCheck : doc -> int -> unit
+    val getVerticalSpace : doc -> bool
+    val setVerticalSpace : doc -> bool -> unit
+    val getPunctuationWrap : doc -> bool
+    val setPunctuationWrap : doc -> bool -> unit
+    val getMergeEmphasis : doc -> bool
+    val setMergeEmphasis : doc -> bool -> unit
+    val getMergeDivs : doc -> int
+    val setMergeDivs : doc -> int -> unit
+    val getDecorateInferredUl : doc -> bool
+    val setDecorateInferredUl : doc -> bool -> unit
+    val getPreserveEntities : doc -> bool
+    val setPreserveEntities : doc -> bool -> unit
+    val getSortAttributes : doc -> int
+    val setSortAttributes : doc -> int -> unit
+    val getMergeSpans : doc -> int
+    val setMergeSpans : doc -> int -> unit
+    val getAnchorAsName : doc -> bool
+    val setAnchorAsName : doc -> bool -> unit
   end
 
 val parseFile : Config.t list -> string -> doc
