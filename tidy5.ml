@@ -633,9 +633,9 @@ module Stub = struct
   external optSetInt: doc -> optionId -> int -> unit= "tidyOptSetInt_stub"
   external optSetBool: doc -> optionId -> bool -> unit= "tidyOptSetBool_stub"
 
-  external setCharEncoding: doc -> string -> int = "tidySetCharEncoding_stub"
-  external setInCharEncoding: doc -> string -> int = "tidySetInCharEncoding_stub"
-  external setOutCharEncoding: doc -> string -> int = "tidySetOutCharEncoding_stub"
+  external setCharEncoding: doc -> string -> unit = "tidySetCharEncoding_stub"
+  external setInCharEncoding: doc -> string -> unit = "tidySetInCharEncoding_stub"
+  external setOutCharEncoding: doc -> string -> unit = "tidySetOutCharEncoding_stub"
   external declareBlockTags: doc -> string -> unit = "tidyDeclareBlockTags_stub"
   external setDropEmptyParas: doc -> bool -> unit = "tidySetDropEmptyParas_stub"
   external setDropEmptyElems: doc -> bool -> unit = "tidySetDropEmptyElems_stub"
@@ -714,6 +714,10 @@ let opt_bool= function
   | _-> failwith "boolean option expected"
 
 let create= Stub.create
+
+let setCharEncoding= Stub.setCharEncoding
+let setInCharEncoding= Stub.setInCharEncoding
+let setOutCharEncoding= Stub.setOutCharEncoding
 
 let parseFile doc filePath=
   match Stub.parseFile doc filePath with

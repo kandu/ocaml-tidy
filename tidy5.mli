@@ -589,6 +589,9 @@ type opt
 val string_of_opt : opt -> string
 
 val create : unit -> doc
+val setCharEncoding : doc -> string -> unit
+val setInCharEncoding : doc -> string -> unit
+val setOutCharEncoding : doc -> string -> unit
 val parseFile : doc -> string -> unit
 val parseString : doc -> string -> unit
 
