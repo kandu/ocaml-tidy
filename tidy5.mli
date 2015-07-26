@@ -586,24 +586,22 @@ type node
 type attr
 type opt
 
-val string_of_opt : opt -> string
-
-val create : unit -> doc
-val setCharEncoding : doc -> string -> unit
-val setInCharEncoding : doc -> string -> unit
-val setOutCharEncoding : doc -> string -> unit
-val parseFile : doc -> string -> unit
-val parseString : doc -> string -> unit
-
-val cleanAndRepair: doc -> unit
-val reportDoctype: doc -> unit
-val runDiagnostics: doc -> unit
-
-val saveFile : doc -> string -> unit
-val saveString : doc -> string option
-
 module Config :
   sig
+    type charEncoding =
+        Ascii
+      | Latin1
+      | Raw
+      | Utf8
+      | Iso2022
+      | Mac
+      | Win1252
+      | Utf16le
+      | Utf16be
+      | Utf16
+      | Big5
+      | Shiftjis
+
     val getOption : doc -> optionId -> opt
     val setOption : doc -> optionId -> opt -> unit
     val getIndentSpaces : doc -> int
@@ -612,12 +610,12 @@ module Config :
     val setWrap : doc -> int -> unit
     val getTabSize : doc -> int
     val setTabSize : doc -> int -> unit
-    val getCharEncoding : doc -> int
-    val setCharEncoding : doc -> int -> unit
-    val getInputEncoding : doc -> int
-    val setInputEncoding : doc -> int -> unit
-    val getOutputEncoding : doc -> int
-    val setOutputEncoding : doc -> int -> unit
+    val getCharEncoding : doc -> charEncoding
+    val setCharEncoding : doc -> charEncoding -> unit
+    val getInputEncoding : doc -> charEncoding
+    val setInputEncoding : doc -> charEncoding -> unit
+    val getOutputEncoding : doc -> charEncoding
+    val setOutputEncoding : doc -> charEncoding -> unit
     val getNewline : doc -> int
     val setNewline : doc -> int -> unit
     val getDoctypeMode : doc -> int
@@ -830,6 +828,17 @@ module Node :
     val column : node -> int
     val extractText : node -> string Core_kernel.Std.List.t
   end
+
+val create : unit -> doc
+val parseFile : doc -> string -> unit
+val parseString : doc -> string -> unit
+
+val cleanAndRepair: doc -> unit
+val reportDoctype: doc -> unit
+val runDiagnostics: doc -> unit
+
+val saveFile : doc -> string -> unit
+val saveString : doc -> string option
 
 module Tree :
   sig
