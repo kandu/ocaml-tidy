@@ -64,6 +64,60 @@ CAMLprim value tidyCreate_stub(value unit) {
     CAMLreturn(result);
 }
 
+CAMLprim value tidyAccessWarningCount_stub(value doc) {
+    return Val_int(tidyAccessWarningCount(doc_val(doc)));
+}
+
+CAMLprim value tidyConfigErrorCount_stub(value doc) {
+    return Val_int(tidyConfigErrorCount(doc_val(doc)));
+}
+
+CAMLprim value tidyDetectedGenericXml_stub(value doc) {
+    return Val_bool(tidyDetectedGenericXml(doc_val(doc)));
+}
+
+CAMLprim value tidyDetectedHtmlVersion_stub(value doc) {
+    return Val_int(tidyDetectedHtmlVersion(doc_val(doc)));
+}
+
+CAMLprim value tidyDetectedXhtml_stub(value doc) {
+    return Val_bool(tidyDetectedXhtml(doc_val(doc)));
+}
+
+CAMLprim value tidyErrorCount_stub(value doc) {
+    return Val_int(tidyErrorCount(doc_val(doc)));
+}
+
+CAMLprim value tidyErrorSummary_stub(value doc) {
+    tidyErrorSummary(doc_val(doc));
+    return Val_unit;
+}
+
+CAMLprim value tidyFileExists_stub(value doc, value file) {
+    return Val_bool(tidyFileExists(doc_val(doc), String_val(file)));
+}
+
+CAMLprim value tidyGeneralInfo_stub(value doc) {
+    tidyGeneralInfo(doc_val(doc));
+    return Val_unit;
+}
+
+CAMLprim value tidyLibraryVersion_stub(value unit) {
+    CAMLparam1(unit);
+    CAMLlocal1(result);
+    result= caml_copy_string(tidyLibraryVersion());
+    CAMLreturn(result);
+}
+
+CAMLprim value tidyLoadConfig_stub(value doc, value path) {
+    tidyLoadConfig(doc_val(doc), String_val(path));
+    return Val_unit;
+}
+
+CAMLprim value tidyWarningCount_stub(value doc) {
+    return Val_int(tidyWarningCount(doc_val(doc)));
+}
+
 CAMLprim value tidyGetOption_stub(value doc, value optId) {
     CAMLparam2(doc, optId);
     CAMLlocal1(result);

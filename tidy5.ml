@@ -633,6 +633,19 @@ module Stub = struct
     | "bool"-> Boolean
     | _-> failwith "unknown type"
 
+  external accessWarningCount: doc -> int = "tidyAccessWarningCount_stub"
+  external configErrorCount: doc -> int = "tidyConfigErrorCount_stub"
+  external detectedGenericXml: doc -> bool = "tidyDetectedGenericXml_stub"
+  external detectedHtmlVersion: doc -> int = "tidyDetectedHtmlVersion_stub"
+  external detectedXhtml: doc -> bool = "tidyDetectedXhtml_stub"
+  external errorCount: doc -> int = "tidyErrorCount_stub"
+  external errorSummary: doc -> unit = "tidyErrorSummary_stub"
+  external fileExists: doc -> string -> unit = "tidyFileExists_stub"
+  external generalInfo: doc -> unit = "tidyGeneralInfo_stub"
+  external libraryVersion: unit -> string = "tidyLibraryVersion_stub"
+  external loadConfig: doc -> string -> unit = "tidyLoadConfig_stub"
+  external warningCount: doc -> int = "tidyWarningCount_stub"
+
   external getOption: doc -> optionId -> opt = "tidyGetOption_stub"
   external optGetName: opt -> string = "tidyOptGetName_stub"
   external optGetType: opt -> optionType = "tidyOptGetType_stub"
@@ -1266,6 +1279,19 @@ let runDiagnostics doc=
 
 let saveFile= Stub.saveFile
 let saveString= Stub.saveString
+
+let accessWarningCount= Stub.accessWarningCount
+let configErrorCount= Stub.configErrorCount
+let detectedGenericXml= Stub.detectedGenericXml
+let detectedHtmlVersion= Stub.detectedHtmlVersion
+let detectedXhtml= Stub.detectedXhtml
+let errorCount= Stub.errorCount
+let errorSummary= Stub.errorSummary
+let fileExists= Stub.fileExists
+let generalInfo= Stub.generalInfo
+let libraryVersion= Stub.libraryVersion
+let loadConfig= Stub.loadConfig
+let warningCount= Stub.warningCount
 
 
 let ()=
