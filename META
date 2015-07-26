@@ -1,5 +1,5 @@
 name= "tidy5"
-version = "0.1"
+version = "0.1.1"
 description = "HTML parser and reformatter"
 requires="core_kernel"
 archive(byte)= "tidy5.cma"
