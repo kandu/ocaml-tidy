@@ -840,6 +840,19 @@ val runDiagnostics: doc -> unit
 val saveFile : doc -> string -> unit
 val saveString : doc -> string option
 
+val accessWarningCount : doc -> int
+val configErrorCount : doc -> int
+val detectedGenericXml : doc -> bool
+val detectedHtmlVersion : doc -> int
+val detectedXhtml : doc -> bool
+val errorCount : doc -> int
+val errorSummary : doc -> unit
+val fileExists : doc -> string -> unit
+val generalInfo : doc -> unit
+val libraryVersion : unit -> string
+val loadConfig : doc -> string -> unit
+val warningCount : doc -> int
+
 module Tree :
   sig
     type index = {
