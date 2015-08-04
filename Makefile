@@ -1,19 +1,19 @@
-PROJECT= tidy5
+PROJECT= tidy
 
 CC= gcc
 
-lib: tidy5.cma tidy5.cmxa
+lib: tidy.cma tidy.cmxa
 
 stub.o: stub.c
 	$(CC) -Wall -fPIC -I `ocamlc -where` -c -o $@ $<
 
-tidy5.cma tidy5.cmxa: tidy5.ml stub.o
-	ocamlfind ocamlmklib -package core_kernel -ltidy5 -o tidy5 -oc tidy5_stubs $^
+tidy.cma tidy.cmxa: tidy.ml stub.o
+	ocamlfind ocamlmklib -package core_kernel -ltidy -o tidy -oc tidy_stubs $^
 
-tidy5.ml: tidy5.cmi
+tidy.ml: tidy.cmi
 
 
-tidy5.cmi: tidy5.mli
+tidy.cmi: tidy.mli
 	ocamlfind ocamlc -package core_kernel $<
 
 .PHONY: install clean
