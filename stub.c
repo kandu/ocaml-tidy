@@ -102,13 +102,6 @@ CAMLprim value tidyGeneralInfo_stub(value doc) {
     return Val_unit;
 }
 
-CAMLprim value tidyLibraryVersion_stub(value unit) {
-    CAMLparam1(unit);
-    CAMLlocal1(result);
-    result= caml_copy_string(tidyLibraryVersion());
-    CAMLreturn(result);
-}
-
 CAMLprim value tidyLoadConfig_stub(value doc, value path) {
     tidyLoadConfig(doc_val(doc), String_val(path));
     return Val_unit;
@@ -224,11 +217,6 @@ CAMLprim value tidyCleanAndRepair_stub(value doc) {
     return Val_unit;
 }
 
-CAMLprim value tidyReportDoctype_stub(value doc) {
-    tidyReportDoctype(doc_val(doc));
-    return Val_unit;
-}
-
 CAMLprim value tidyRunDiagnostics_stub(value doc) {
     tidyRunDiagnostics(doc_val(doc));
     return Val_unit;
@@ -281,11 +269,6 @@ CAMLprim value tidyDeclareBlockTags_stub(value doc, value tags) {
 
 CAMLprim value tidySetDropEmptyParas_stub(value doc, value ifDrop) {
     tidyOptSetBool(doc_val(doc), TidyDropEmptyParas, Int_val(ifDrop));
-    return Val_unit;
-}
-
-CAMLprim value tidySetDropEmptyElems_stub(value doc, value ifDrop) {
-    tidyOptSetBool(doc_val(doc), TidyDropEmptyElems, Int_val(ifDrop));
     return Val_unit;
 }
 
