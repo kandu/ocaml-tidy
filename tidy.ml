@@ -461,6 +461,7 @@ module Stub = struct
     | "bool"-> Boolean
     | _-> failwith "unknown type"
 
+  external releaseDate: unit -> string= "tidyReleaseDate_stub"
   external accessWarningCount: doc -> int = "tidyAccessWarningCount_stub"
   external configErrorCount: doc -> int = "tidyConfigErrorCount_stub"
   external detectedGenericXml: doc -> bool = "tidyDetectedGenericXml_stub"
@@ -1085,6 +1086,8 @@ end
 
 
 let create= Stub.create
+
+let releaseDate= Stub.releaseDate
 
 let parseFile doc filePath=
   match Stub.parseFile doc filePath with

@@ -64,6 +64,15 @@ CAMLprim value tidyCreate_stub(value unit) {
     CAMLreturn(result);
 }
 
+
+
+CAMLprim value tidyReleaseDate_stub(value unit) {
+    CAMLparam1(unit);
+    CAMLlocal1(result);
+    result= caml_copy_string(tidyReleaseDate());
+    CAMLreturn(result);
+}
+
 CAMLprim value tidyAccessWarningCount_stub(value doc) {
     return Val_int(tidyAccessWarningCount(doc_val(doc)));
 }

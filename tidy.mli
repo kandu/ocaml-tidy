@@ -658,6 +658,9 @@ module Node :
   end
 
 val create : unit -> doc
+
+val releaseDate : unit -> string
+
 val parseFile : doc -> string -> unit
 val parseString : doc -> string -> unit
 
