@@ -8,7 +8,7 @@ stub.o: stub.c
 	$(CC) -Wall -fPIC -I `ocamlc -where` -c -o $@ $<
 
 tidy.cma tidy.cmxa: tidy.ml stub.o
-	ocamlfind ocamlmklib -package core_kernel -ltidy -o tidy -oc tidy_stubs $^
+	ocamlfind ocamlmklib -package core_kernel -ltidy5 -o tidy -oc tidy_stubs $^
 
 tidy.ml: tidy.cmi
 
