@@ -6,10 +6,10 @@ CFLAGS+= -I `ocamlc -where`
 lib: tidy.cma tidy.cmxa
 
 stub.o: stub.c
-	$(CC) -Wall -fPIC -c $(CFLAGS) -o $@ $<
+	$(CC) -Wall -fPIC  -c $(CFLAGS) -o $@ $<
 
 tidy.cma tidy.cmxa: tidy.ml stub.o
-	ocamlfind ocamlmklib -package core_kernel -ltidy5 -o tidy -oc tidy_stubs $^
+	ocamlfind ocamlmklib -package core_kernel -ltidy -o tidy -oc tidy_stubs $^
 
 tidy.ml: tidy.cmi
 
