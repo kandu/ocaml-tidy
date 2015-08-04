@@ -2,6 +2,7 @@ PROJECT= tidy
 
 CC= gcc
 CFLAGS+= -I `ocamlc -where`
+CFLAGS+= -I /usr/include/tidy
 
 lib: tidy.cma tidy.cmxa
 
