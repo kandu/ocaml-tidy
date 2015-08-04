@@ -1,7 +1,7 @@
-name= "tidy5"
-version = "0.1.1"
+name= "tidy"
+version = "1:4.9-0.1.1"
 description = "HTML parser and reformatter"
 requires="core_kernel"
-archive(byte)= "tidy5.cma"
-archive(native)= "tidy5.cmxa"
+archive(byte)= "tidy.cma"
+archive(native)= "tidy.cmxa"
 
