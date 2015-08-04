@@ -138,34 +138,6 @@ type tagId=
   | Tag_WBR (* WBR. *)
   | Tag_XMP (* XMP. *)
   | Tag_NEXTID (* NEXTID. *)
-  | Tag_ARTICLE
-  | Tag_ASIDE
-  | Tag_AUDIO
-  | Tag_BDI
-  | Tag_CANVAS
-  | Tag_COMMAND
-  | Tag_DATALIST
-  | Tag_DETAILS
-  | Tag_DIALOG
-  | Tag_FIGCAPTION
-  | Tag_FIGURE
-  | Tag_FOOTER
-  | Tag_HEADER
-  | Tag_HGROUP
-  | Tag_MAIN
-  | Tag_MARK
-  | Tag_MENUITEM
-  | Tag_METER
-  | Tag_NAV
-  | Tag_OUTPUT
-  | Tag_PROGRESS
-  | Tag_SECTION
-  | Tag_SOURCE
-  | Tag_SUMMARY
-  | Tag_TEMPLATE
-  | Tag_TIME
-  | Tag_TRACK
-  | Tag_VIDEO
   | N_TIDY_TAGS
 
 type attrId=
@@ -338,149 +310,6 @@ type attrId=
   | Attr_SDAPREF (* SDAPREF=. *)
   | Attr_SDASUFF (* SDASUFF=. *)
   | Attr_URN (* URN=. *)
-  | Attr_ASYNC
-  | Attr_AUTOCOMPLETE
-  | Attr_AUTOFOCUS
-  | Attr_AUTOPLAY
-  | Attr_CHALLENGE
-  | Attr_CONTENTEDITABLE
-  | Attr_CONTEXTMENU
-  | Attr_CONTROLS
-  | Attr_DEFAULT
-  | Attr_DIRNAME
-  | Attr_DRAGGABLE
-  | Attr_DROPZONE
-  | Attr_FORM
-  | Attr_FORMACTION
-  | Attr_FORMENCTYPE
-  | Attr_FORMMETHOD
-  | Attr_FORMNOVALIDATE
-  | Attr_FORMTARGET
-  | Attr_HIDDEN
-  | Attr_HIGH
-  | Attr_ICON
-  | Attr_KEYTYPE
-  | Attr_KIND
-  | Attr_LIST
-  | Attr_LOOP
-  | Attr_LOW
-  | Attr_MANIFEST
-  | Attr_MAX
-  | Attr_MEDIAGROUP
-  | Attr_MIN
-  | Attr_NOVALIDATE
-  | Attr_OPEN
-  | Attr_OPTIMUM
-  | Attr_OnABORT
-  | Attr_OnAFTERPRINT
-  | Attr_OnBEFOREPRINT
-  | Attr_OnCANPLAY
-  | Attr_OnCANPLAYTHROUGH
-  | Attr_OnCONTEXTMENU
-  | Attr_OnCUECHANGE
-  | Attr_OnDRAG
-  | Attr_OnDRAGEND
-  | Attr_OnDRAGENTER
-  | Attr_OnDRAGLEAVE
-  | Attr_OnDRAGOVER
-  | Attr_OnDRAGSTART
-  | Attr_OnDROP
-  | Attr_OnDURATIONCHANGE
-  | Attr_OnEMPTIED
-  | Attr_OnENDED
-  | Attr_OnERROR
-  | Attr_OnHASHCHANGE
-  | Attr_OnINPUT
-  | Attr_OnINVALID
-  | Attr_OnLOADEDDATA
-  | Attr_OnLOADEDMETADATA
-  | Attr_OnLOADSTART
-  | Attr_OnMESSAGE
-  | Attr_OnMOUSEWHEEL
-  | Attr_OnOFFLINE
-  | Attr_OnONLINE
-  | Attr_OnPAGEHIDE
-  | Attr_OnPAGESHOW
-  | Attr_OnPAUSE
-  | Attr_OnPLAY
-  | Attr_OnPLAYING
-  | Attr_OnPOPSTATE
-  | Attr_OnPROGRESS
-  | Attr_OnRATECHANGE
-  | Attr_OnREADYSTATECHANGE
-  | Attr_OnREDO
-  | Attr_OnRESIZE
-  | Attr_OnSCROLL
-  | Attr_OnSEEKED
-  | Attr_OnSEEKING
-  | Attr_OnSHOW
-  | Attr_OnSTALLED
-  | Attr_OnSTORAGE
-  | Attr_OnSUSPEND
-  | Attr_OnTIMEUPDATE
-  | Attr_OnUNDO
-  | Attr_OnVOLUMECHANGE
-  | Attr_OnWAITING
-  | Attr_PATTERN
-  | Attr_PLACEHOLDER
-  | Attr_POSTER
-  | Attr_PRELOAD
-  | Attr_PUBDATE
-  | Attr_RADIOGROUP
-  | Attr_REQUIRED
-  | Attr_REVERSED
-  | Attr_SANDBOX
-  | Attr_SCOPED
-  | Attr_SEAMLESS
-  | Attr_SIZES
-  | Attr_SPELLCHECK
-  | Attr_SRCDOC
-  | Attr_SRCLANG
-  | Attr_STEP
-  | Attr_ARIA_ACTIVEDESCENDANT
-  | Attr_ARIA_ATOMIC
-  | Attr_ARIA_AUTOCOMPLETE
-  | Attr_ARIA_BUSY
-  | Attr_ARIA_CHECKED
-  | Attr_ARIA_CONTROLS
-  | Attr_ARIA_DESCRIBEDBY
-  | Attr_ARIA_DISABLED
-  | Attr_ARIA_DROPEFFECT
-  | Attr_ARIA_EXPANDED
-  | Attr_ARIA_FLOWTO
-  | Attr_ARIA_GRABBED
-  | Attr_ARIA_HASPOPUP
-  | Attr_ARIA_HIDDEN
-  | Attr_ARIA_INVALID
-  | Attr_ARIA_LABEL
-  | Attr_ARIA_LABELLEDBY
-  | Attr_ARIA_LEVEL
-  | Attr_ARIA_LIVE
-  | Attr_ARIA_MULTILINE
-  | Attr_ARIA_MULTISELECTABLE
-  | Attr_ARIA_ORIENTATION
-  | Attr_ARIA_OWNS
-  | Attr_ARIA_POSINSET
-  | Attr_ARIA_PRESSED
-  | Attr_ARIA_READONLY
-  | Attr_ARIA_RELEVANT
-  | Attr_ARIA_REQUIRED
-  | Attr_ARIA_SELECTED
-  | Attr_ARIA_SETSIZE
-  | Attr_ARIA_SORT
-  | Attr_ARIA_VALUEMAX
-  | Attr_ARIA_VALUEMIN
-  | Attr_ARIA_VALUENOW
-  | Attr_ARIA_VALUETEXT
-  | Attr_X (* X=. *)
-  | Attr_Y (* Y=. *)
-  | Attr_VIEWBOX (* VIEWBOX=. *)
-  | Attr_PRESERVEASPECTRATIO (* PRESERVEASPECTRATIO=. *)
-  | Attr_ZOOMANDPAN (* ZOOMANDPAN=. *)
-  | Attr_BASEPROFILE (* BASEPROFILE=. *)
-  | Attr_CONTENTSCRIPTTYPE (* CONTENTSCRIPTTYPE=. *)
-  | Attr_CONTENTSTYLETYPE (* CONTENTSTYLETYPE=. *)
-  | Attr_DISPLAY (* DISPLAY= (html5) *)
   | N_TIDY_ATTRIBS
 
 type optionId=
@@ -578,7 +407,6 @@ type optionId=
   | TidySortAttributes  (* Sort attributes. *)
   | TidyMergeSpans  (* Merge multiple SPANs. *)
   | TidyAnchorAsName  (* Define anchors as name attributes. *)
-  | TidyPPrintTabs  (* Indent using tabs istead of spaces. *)
   | N_TIDY_OPTIONS  (* Must be last.  *)
 
 type doc
@@ -830,11 +658,13 @@ module Node :
   end
 
 val create : unit -> doc
+
+val releaseDate : unit -> string
+
 val parseFile : doc -> string -> unit
 val parseString : doc -> string -> unit
 
 val cleanAndRepair: doc -> unit
-val reportDoctype: doc -> unit
 val runDiagnostics: doc -> unit
 
 val saveFile : doc -> string -> unit
@@ -849,7 +679,6 @@ val errorCount : doc -> int
 val errorSummary : doc -> unit
 val fileExists : doc -> string -> unit
 val generalInfo : doc -> unit
-val libraryVersion : unit -> string
 val loadConfig : doc -> string -> unit
 val warningCount : doc -> int
 
