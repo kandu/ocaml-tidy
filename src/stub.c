@@ -1,5 +1,5 @@
 #include <tidy.h>
-#include <buffio.h>
+#include <tidybuffio.h>
 
 #define CAML_NAME_SPACE
 #include <caml/mlvalues.h>
