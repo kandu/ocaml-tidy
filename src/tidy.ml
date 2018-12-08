@@ -1,4 +1,4 @@
-open Core_kernel.Std
+open Core_kernel
 
 type nodeType=
   | Node_Root      (* Root *)
@@ -669,9 +669,9 @@ module Stub = struct
   external parseFile: doc -> string -> result= "tidyParseFile_stub"
   external parseString: doc -> string -> result= "tidyParseString_stub"
 
-  external cleanAndRepair: doc -> unit= "tidyCleanAndRepair_stub" "noalloc"
-  external reportDoctype: doc -> unit= "tidyReportDoctype_stub" "noalloc"
-  external runDiagnostics: doc -> unit= "tidyRunDiagnostics_stub" "noalloc"
+  external cleanAndRepair: doc -> unit= "tidyCleanAndRepair_stub" [@@noalloc]
+  external reportDoctype: doc -> unit= "tidyReportDoctype_stub" [@@noalloc]
+  external runDiagnostics: doc -> unit= "tidyRunDiagnostics_stub" [@@noalloc]
 
   external saveFile: doc -> string -> unit= "tidySaveFile_stub"
   external saveString: doc -> string option= "tidySaveString_stub"
@@ -1151,7 +1151,7 @@ module DocTree = struct
     let rec get_attrs attr map=
       match Stub.attrNext attr with
       | Some attr-> get_attrs attr
-        (String.Map.add map
+        (String.Map.set map
           ~key:(Stub.attrName attr)
           ~data:(Stub.attrValue attr))
       | None-> map
@@ -1188,13 +1188,13 @@ module Node = struct
   let getValue_exn node=
     match getValue node with
     | Some value-> value
-    | None-> raise Not_found
+    | None-> raise Caml.Not_found
   let getId {doc; node}= Stub.nodeGetId node
   let getText {doc; node}= Stub.nodeGetText doc node
   let getText_exn node=
     match getText node with
     | Some text-> text
-    | None-> raise Not_found
+    | None-> raise Caml.Not_found
 
   let line {doc; node}= Stub.nodeLine node
   let column {doc; node}= Stub.nodeColumn node
@@ -1229,13 +1229,13 @@ module Tree = struct
           { byType= String.Map.merge acc.byType index.byType
               ~f:(fun ~key value->
                 match value with
-                | `Both (a, b)-> Some (List.merge a b ~cmp:compare)
+                | `Both (a, b)-> Some (List.merge a b ~compare)
                 | `Left v-> Some v
                 | `Right v-> Some v);
             byAttr= String.Map.merge acc.byAttr index.byAttr
               ~f:(fun ~key value->
                 match value with
-                | `Both (a, b)-> Some (List.merge a b ~cmp:compare)
+                | `Both (a, b)-> Some (List.merge a b ~compare)
                 | `Left v-> Some v
                 | `Right v-> Some v)})
       in

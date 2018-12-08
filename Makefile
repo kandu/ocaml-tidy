@@ -1,30 +1,20 @@
-PROJECT= tidy
+default:
+	dune build
 
-CC= gcc
-CFLAGS+= -I `ocamlc -where`
-
-lib: tidy.cma tidy.cmxa
-
-stub.o: stub.c
-	$(CC) -Wall -fPIC -c $(CFLAGS) -o $@ $<
-
-tidy.cma tidy.cmxa: tidy.ml stub.o
-	ocamlfind ocamlmklib -package core_kernel -ltidy5 -o tidy -oc tidy_stubs $^
-
-tidy.ml: tidy.cmi
-
-
-tidy.cmi: tidy.mli
-	ocamlfind ocamlc -package core_kernel $<
-
-.PHONY: install clean
-
-install: lib
-	ocamlfind install $(PROJECT) META *.mli *.cmi *.cma *.cmxa *.so *.a
+install:
+	dune install
 
 uninstall:
-	ocamlfind remove $(PROJECT)
+	dune uninstall
+
+doc:
+	dune build @doc
 
 clean:
-	rm -f *.annot *.o *.cm* *.a *.so
+	dune clean
 
+runtest:
+	dune runtest
+
+all-supported-ocaml-versions:
+	dune build @install @runtest --workspace dune-workspace.dev --root .
