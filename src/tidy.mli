@@ -802,7 +802,7 @@ module Attr :
   sig
     val attrGetId : attr -> attrId
     val attrIsEvent : attr -> bool
-    val attrIsProp : attr -> bool
+    (* val attrIsProp : attr -> bool *)
     val attrGetById : node -> attrId -> attr option
   end
 

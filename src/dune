@@ -4,5 +4,5 @@
   (libraries core_kernel)
   (flags (:standard -safe-string))
   (c_names stub)
-  (c_flags (-I/usr/include/tidy -I/usr/local/include/tidy))
+  (c_flags (-Werror -I/usr/include/tidy -I/usr/local/include/tidy))
   (c_library_flags (-ltidy)))

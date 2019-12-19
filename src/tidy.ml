@@ -683,7 +683,6 @@ module Stub = struct
 
   external attrGetId: attr -> attrId = "tidyAttrGetId_stub"
   external attrIsEvent: attr -> bool = "tidyAttrIsEvent_stub"
-  external attrIsProp: attr -> bool = "tidyAttrIsProp_stub"
 
   external attrGetById: node -> attrId -> attr option= "tidyAttrGetById_stub"
 
@@ -776,7 +775,54 @@ module Config = struct
         name
         (Stub.string_of_optionType optType)))
 
+  type charEncoding=
+    | Ascii
+    | Latin1
+    | Raw
+    | Utf8
+    | Iso2022
+    | Mac
+    | Win1252
+    | Utf16le
+    | Utf16be
+    | Utf16
+    | Big5
+    | Shiftjis
+
+  let charEncoding_to_string= function
+    | Ascii-> "Ascii"
+    | Latin1-> "Latin1"
+    | Raw-> "Raw"
+    | Utf8-> "Utf8"
+    | Iso2022-> "Iso2022"
+    | Mac-> "Mac"
+    | Win1252-> "Win1252"
+    | Utf16le-> "Utf16le"
+    | Utf16be-> "Utf16be"
+    | Utf16-> "Utf16"
+    | Big5-> "Big5"
+    | Shiftjis-> "Shiftjis"
+
+  let charEncoding_of_string s=
+    let low= String.lowercase s in
+    match low with
+    | "ascii"-> Ascii
+    | "latin1"-> Latin1
+    | "raw"-> Raw
+    | "utf8"-> Utf8
+    | "iso2022"-> Iso2022
+    | "mac"-> Mac
+    | "win1252"-> Win1252
+    | "utf16le"-> Utf16le
+    | "utf16be"-> Utf16be
+    | "utf16"-> Utf16
+    | "big5"-> Big5
+    | "shiftjis"-> Shiftjis
+    | _-> failwith "charEncoding_of_string"
+
+
   module Raw = struct
+
     let getIndentSpaces doc= getOption doc TidyIndentSpaces |> opt_int
     let setIndentSpaces doc opt= setOption doc TidyIndentSpaces (Int opt)
 
@@ -786,14 +832,14 @@ module Config = struct
     let getTabSize doc= getOption doc TidyTabSize |> opt_int
     let setTabSize doc opt= setOption doc TidyTabSize (Int opt)
 
-    let getCharEncoding doc= getOption doc TidyCharEncoding |> opt_int
-    let setCharEncoding doc opt= setOption doc TidyCharEncoding (Int opt)
+    let getCharEncoding doc= getOption doc TidyCharEncoding |> opt_str |> charEncoding_of_string
+    let setCharEncoding doc opt= setOption doc TidyCharEncoding (Str (opt |> charEncoding_to_string))
 
-    let getInputEncoding doc= getOption doc TidyInCharEncoding |> opt_int
-    let setInputEncoding doc opt= setOption doc TidyInCharEncoding (Int opt)
+    let getInputEncoding doc= getOption doc TidyInCharEncoding |> opt_str |> charEncoding_of_string
+    let setInputEncoding doc opt= setOption doc TidyInCharEncoding (Str (opt |> charEncoding_to_string))
 
-    let getOutputEncoding doc= getOption doc TidyOutCharEncoding |> opt_int
-    let setOutputEncoding doc opt= setOption doc TidyOutCharEncoding (Int opt)
+    let getOutputEncoding doc= getOption doc TidyOutCharEncoding |> opt_str |> charEncoding_of_string
+    let setOutputEncoding doc opt= setOption doc TidyOutCharEncoding (Str (opt |> charEncoding_to_string))
 
     let getNewline doc= getOption doc TidyNewline |> opt_int
     let setNewline doc opt= setOption doc TidyNewline (Int opt)
@@ -1059,26 +1105,6 @@ module Config = struct
 
   include Raw
 
-  type charEncoding=
-    | Ascii
-    | Latin1
-    | Raw
-    | Utf8
-    | Iso2022
-    | Mac
-    | Win1252
-    | Utf16le
-    | Utf16be
-    | Utf16
-    | Big5
-    | Shiftjis
-
-  let ce2intMap: (charEncoding, int) Hashtbl.Poly.t= Hashtbl.Poly.create ()
-  let int2ceMap: (int, charEncoding) Hashtbl.Poly.t= Hashtbl.Poly.create ()
-
-  let int_of_ce ce= Hashtbl.Poly.find_exn ce2intMap ce
-  let ce_of_int integer= Hashtbl.Poly.find_exn int2ceMap integer
-
   let getNewInlineTags doc=
     Raw.getNewInlineTags doc |> String.split ~on:' '
   let setNewInlineTags doc opt=
@@ -1099,26 +1125,19 @@ module Config = struct
   let setNewPreTags doc opt=
     String.concat ~sep:" " opt |> Raw.setNewPreTags doc
 
-  let getCharEncoding doc=
-    Raw.getCharEncoding doc |> ce_of_int
-  let setCharEncoding doc ce=
-    int_of_ce ce |> Raw.setCharEncoding doc
+  let getCharEncoding= Raw.getCharEncoding
+  let setCharEncoding= Raw.setCharEncoding
 
-  let getInputEncoding doc=
-    Raw.getInputEncoding doc |> ce_of_int
-  let setInputEncoding doc ce=
-    int_of_ce ce |> Raw.setInputEncoding doc
+  let getInputEncoding= Raw.getInputEncoding
+  let setInputEncoding= Raw.setInputEncoding
 
-  let getOutputEncoding doc=
-    Raw.getOutputEncoding doc |> ce_of_int
-  let setOutputEncoding doc ce=
-    int_of_ce ce |> Raw.setOutputEncoding doc
+  let getOutputEncoding= Raw.getOutputEncoding
+  let setOutputEncoding= Raw.setOutputEncoding
 end
 
 module Attr = struct
   let attrGetId {doc; attr}= Stub.attrGetId attr
   let attrIsEvent {doc; attr}= Stub.attrIsEvent attr
-  let attrIsProp {doc; attr}= Stub.attrIsProp attr
 
   let attrGetById {doc; node} attrId=
     match Stub.attrGetById node attrId with
@@ -1229,13 +1248,13 @@ module Tree = struct
           { byType= String.Map.merge acc.byType index.byType
               ~f:(fun ~key value->
                 match value with
-                | `Both (a, b)-> Some (List.merge a b ~compare)
+                | `Both (a, b)-> Some (List.merge a b ~compare:Poly.compare)
                 | `Left v-> Some v
                 | `Right v-> Some v);
             byAttr= String.Map.merge acc.byAttr index.byAttr
               ~f:(fun ~key value->
                 match value with
-                | `Both (a, b)-> Some (List.merge a b ~compare)
+                | `Both (a, b)-> Some (List.merge a b ~compare:Poly.compare)
                 | `Left v-> Some v
                 | `Right v-> Some v)})
       in
@@ -1253,7 +1272,7 @@ module Tree = struct
         ~f:(fun node->
           Option.value
             (let attrs= DocTree.getAttrs node in
-            String.Map.find attrs attr >>| ((=) _value))
+            String.Map.find attrs attr >>| (Poly.equal _value))
             ~default:false))
       |> value ~default:[]
 end
@@ -1292,69 +1311,4 @@ let generalInfo= Stub.generalInfo
 let libraryVersion= Stub.libraryVersion
 let loadConfig= Stub.loadConfig
 let warningCount= Stub.warningCount
-
-
-let ()=
-  let doc= create () in
-  begin
-    Stub.setCharEncoding doc "ascii";
-    Stub.ce_ascii:= Config.Raw.getCharEncoding doc;
-    Hashtbl.Poly.add_exn Config.ce2intMap ~key:Config.Ascii ~data:!Stub.ce_ascii;
-    Hashtbl.Poly.add_exn Config.int2ceMap ~key:!Stub.ce_ascii ~data:Config.Ascii;
-
-    Stub.setCharEncoding doc "latin1";
-    Stub.ce_latin1:= Config.Raw.getCharEncoding doc;
-    Hashtbl.Poly.add_exn Config.ce2intMap ~key:Config.Latin1 ~data:!Stub.ce_latin1;
-    Hashtbl.Poly.add_exn Config.int2ceMap ~key:!Stub.ce_latin1 ~data:Config.Latin1;
-
-    Stub.setCharEncoding doc "raw";
-    Stub.ce_raw:= Config.Raw.getCharEncoding doc;
-    Hashtbl.Poly.add_exn Config.ce2intMap ~key:Config.Raw ~data:!Stub.ce_raw;
-    Hashtbl.Poly.add_exn Config.int2ceMap ~key:!Stub.ce_raw ~data:Config.Raw;
-
-    Stub.setCharEncoding doc "utf8";
-    Stub.ce_utf8:= Config.Raw.getCharEncoding doc;
-    Hashtbl.Poly.add_exn Config.ce2intMap ~key:Config.Utf8 ~data:!Stub.ce_utf8;
-    Hashtbl.Poly.add_exn Config.int2ceMap ~key:!Stub.ce_utf8 ~data:Config.Utf8;
-
-    Stub.setCharEncoding doc "iso2022";
-    Stub.ce_iso2022:= Config.Raw.getCharEncoding doc;
-    Hashtbl.Poly.add_exn Config.ce2intMap ~key:Config.Iso2022 ~data:!Stub.ce_iso2022;
-    Hashtbl.Poly.add_exn Config.int2ceMap ~key:!Stub.ce_iso2022 ~data:Config.Iso2022;
-
-    Stub.setCharEncoding doc "mac";
-    Stub.ce_mac:= Config.Raw.getCharEncoding doc;
-    Hashtbl.Poly.add_exn Config.ce2intMap ~key:Config.Mac ~data:!Stub.ce_mac;
-    Hashtbl.Poly.add_exn Config.int2ceMap ~key:!Stub.ce_mac ~data:Config.Mac;
-
-    Stub.setCharEncoding doc "win1252";
-    Stub.ce_win1252:= Config.Raw.getCharEncoding doc;
-    Hashtbl.Poly.add_exn Config.ce2intMap ~key:Config.Win1252 ~data:!Stub.ce_win1252;
-    Hashtbl.Poly.add_exn Config.int2ceMap ~key:!Stub.ce_win1252 ~data:Config.Win1252;
-
-    Stub.setCharEncoding doc "utf16le";
-    Stub.ce_utf16le:= Config.Raw.getCharEncoding doc;
-    Hashtbl.Poly.add_exn Config.ce2intMap ~key:Config.Utf16le ~data:!Stub.ce_utf16le;
-    Hashtbl.Poly.add_exn Config.int2ceMap ~key:!Stub.ce_utf16le ~data:Config.Utf16le;
-
-    Stub.setCharEncoding doc "utf16be";
-    Stub.ce_utf16be:= Config.Raw.getCharEncoding doc;
-    Hashtbl.Poly.add_exn Config.ce2intMap ~key:Config.Utf16be ~data:!Stub.ce_utf16be;
-    Hashtbl.Poly.add_exn Config.int2ceMap ~key:!Stub.ce_utf16be ~data:Config.Utf16be;
-
-    Stub.setCharEncoding doc "utf16";
-    Stub.ce_utf16:= Config.Raw.getCharEncoding doc;
-    Hashtbl.Poly.add_exn Config.ce2intMap ~key:Config.Utf16 ~data:!Stub.ce_utf16;
-    Hashtbl.Poly.add_exn Config.int2ceMap ~key:!Stub.ce_utf16 ~data:Config.Utf16;
-
-    Stub.setCharEncoding doc "big5";
-    Stub.ce_big5:= Config.Raw.getCharEncoding doc;
-    Hashtbl.Poly.add_exn Config.ce2intMap ~key:Config.Big5 ~data:!Stub.ce_big5;
-    Hashtbl.Poly.add_exn Config.int2ceMap ~key:!Stub.ce_big5 ~data:Config.Big5;
-
-    Stub.setCharEncoding doc "shiftjis";
-    Stub.ce_shiftjis:= Config.Raw.getCharEncoding doc;
-    Hashtbl.Poly.add_exn Config.ce2intMap ~key:Config.Shiftjis ~data:!Stub.ce_shiftjis;
-    Hashtbl.Poly.add_exn Config.int2ceMap ~key:!Stub.ce_shiftjis ~data:Config.Shiftjis;
-  end
 

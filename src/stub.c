@@ -335,13 +335,6 @@ CAMLprim value tidyAttrIsEvent_stub(value attr) {
     CAMLreturn(result);
 }
 
-CAMLprim value tidyAttrIsProp_stub(value attr) {
-    CAMLparam1(attr);
-    CAMLlocal1(result);
-    result= Val_bool(tidyAttrIsProp(attr_val(attr)));
-    CAMLreturn(result);
-}
-
 CAMLprim value tidyAttrGetById_stub(value node, value attrId) {
     CAMLparam2(node, attrId);
     CAMLlocal2(result, data);
