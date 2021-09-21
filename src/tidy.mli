@@ -591,6 +591,7 @@ val opt_str : opt -> string
 val opt_int : opt -> int
 val opt_bool : opt -> bool
 
+module StringMap : Map.S with type key = String.t
 
 module Config :
   sig
@@ -814,7 +815,7 @@ module DocTree :
     val getBody : doc -> node
     val getParent : node -> node option
     val getChildren : node -> node list
-    val getAttrs : node -> string Core_kernel.String.Map.t
+    val getAttrs : node -> string StringMap.t
   end
 
 module Node :
@@ -832,7 +833,7 @@ module Node :
     val getText_exn : node -> string
     val line : node -> int
     val column : node -> int
-    val extractText : node -> string Core_kernel.List.t
+    val extractText : node -> string List.t
   end
 
 val create : unit -> doc
@@ -862,8 +863,8 @@ val warningCount : doc -> int
 module Tree :
   sig
     type index = {
-      byType : node list Core_kernel.String.Map.t;
-      byAttr : node list Core_kernel.String.Map.t;
+      byType : node list StringMap.t;
+      byAttr : node list StringMap.t;
     }
     val generateIndex : node -> index
     val find : index -> string -> string -> node list

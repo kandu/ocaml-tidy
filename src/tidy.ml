@@ -1,5 +1,3 @@
-open Core_kernel
-
 type nodeType=
   | Node_Root      (* Root *)
   | Node_DocType   (* DOCTYPE *)
@@ -627,7 +625,7 @@ module Stub = struct
     | Boolean-> "bool"
 
   let optionType_of_string str=
-    match String.lowercase str with
+    match String.lowercase_ascii str with
     | "string"-> String
     | "int"-> Integer
     | "bool"-> Boolean
@@ -720,6 +718,9 @@ type attr= {
   attr: Stub.attr;
 }
 
+module StringMap = Map.Make(String)
+open Printf
+
 let string_of_opt opt=
   match opt with
   | Str v-> sprintf "%s:string" v
@@ -740,7 +741,7 @@ let opt_bool= function
 
 module Config = struct
   let blockTags doc tags=
-    Stub.declareBlockTags doc (String.concat ~sep:" " tags)
+    Stub.declareBlockTags doc (String.concat " " tags)
 
   let getOption doc optId=
     match Stub.getOption doc optId |> Stub.optGetType with
@@ -804,7 +805,7 @@ module Config = struct
     | Shiftjis-> "Shiftjis"
 
   let charEncoding_of_string s=
-    let low= String.lowercase s in
+    let low= String.lowercase_ascii s in
     match low with
     | "ascii"-> Ascii
     | "latin1"-> Latin1
@@ -1106,24 +1107,24 @@ module Config = struct
   include Raw
 
   let getNewInlineTags doc=
-    Raw.getNewInlineTags doc |> String.split ~on:' '
+    Raw.getNewInlineTags doc |> String.split_on_char ' '
   let setNewInlineTags doc opt=
-    String.concat ~sep:" " opt |> Raw.setNewInlineTags doc
+    String.concat " " opt |> Raw.setNewInlineTags doc
 
   let getNewBlocklevelTags doc=
-    Raw.getNewBlocklevelTags doc |> String.split ~on:' '
+    Raw.getNewBlocklevelTags doc |> String.split_on_char ' '
   let setNewBlocklevelTags doc opt=
-    String.concat ~sep:" " opt |> Raw.setNewBlocklevelTags doc
+    String.concat " " opt |> Raw.setNewBlocklevelTags doc
 
   let getNewEmptyTags doc=
-    Raw.getNewEmptyTags doc |> String.split ~on:' '
+    Raw.getNewEmptyTags doc |> String.split_on_char ' '
   let setNewEmptyTags doc opt=
-    String.concat ~sep:" " opt |> Raw.setNewEmptyTags doc
+    String.concat " " opt |> Raw.setNewEmptyTags doc
 
   let getNewPreTags doc=
-    Raw.getNewPreTags doc |> String.split ~on:' '
+    Raw.getNewPreTags doc |> String.split_on_char ' '
   let setNewPreTags doc opt=
-    String.concat ~sep:" " opt |> Raw.setNewPreTags doc
+    String.concat " " opt |> Raw.setNewPreTags doc
 
   let getCharEncoding= Raw.getCharEncoding
   let setCharEncoding= Raw.setCharEncoding
@@ -1170,15 +1171,16 @@ module DocTree = struct
     let rec get_attrs attr map=
       match Stub.attrNext attr with
       | Some attr-> get_attrs attr
-        (String.Map.set map
-          ~key:(Stub.attrName attr)
-          ~data:(Stub.attrValue attr))
+        (StringMap.add
+          (Stub.attrName attr)
+          (Stub.attrValue attr)
+          map)
       | None-> map
     in
     match Stub.attrFirst node with
     | Some attr-> get_attrs attr
-        (String.Map.singleton (Stub.attrName attr) (Stub.attrValue attr))
-    | None-> String.Map.empty
+        (StringMap.singleton (Stub.attrName attr) (Stub.attrValue attr))
+    | None-> StringMap.empty
 end
 
 
@@ -1207,13 +1209,13 @@ module Node = struct
   let getValue_exn node=
     match getValue node with
     | Some value-> value
-    | None-> raise Caml.Not_found
+    | None-> raise Not_found
   let getId {doc; node}= Stub.nodeGetId node
   let getText {doc; node}= Stub.nodeGetText doc node
   let getText_exn node=
     match getText node with
     | Some text-> text
-    | None-> raise Caml.Not_found
+    | None-> raise Not_found
 
   let line {doc; node}= Stub.nodeLine node
   let column {doc; node}= Stub.nodeColumn node
@@ -1223,58 +1225,70 @@ module Node = struct
     | Node_Text-> [Option.value (getText node) ~default:""]
     | Node_Start | Node_End | Node_StartEnd->
       DocTree.getChildren node
-        |> List.map ~f:extractText
+        |> List.map extractText
         |> List.concat
     | _-> []
 end
 
 module Tree = struct
   type index= {
-    byType: node list String.Map.t;
-    byAttr: node list String.Map.t;
+    byType: node list StringMap.t;
+    byAttr: node list StringMap.t;
   }
 
   let rec generateIndex node=
     if Node.isText node then
-      { byType= String.Map.singleton "text" [node];
-        byAttr= String.Map.empty}
+      { byType= StringMap.singleton "text" [node];
+        byAttr= StringMap.empty}
     else
       let name= Node.getName node
       and attrs= DocTree.getAttrs node
-      and childrenIndex= List.map (DocTree.getChildren node) ~f:generateIndex in
-      let index= List.fold childrenIndex
-        ~init:{byType= String.Map.empty; byAttr= String.Map.empty}
-        ~f:(fun acc index->
-          { byType= String.Map.merge acc.byType index.byType
-              ~f:(fun ~key value->
-                match value with
-                | `Both (a, b)-> Some (List.merge a b ~compare:Poly.compare)
-                | `Left v-> Some v
-                | `Right v-> Some v);
-            byAttr= String.Map.merge acc.byAttr index.byAttr
-              ~f:(fun ~key value->
-                match value with
-                | `Both (a, b)-> Some (List.merge a b ~compare:Poly.compare)
-                | `Left v-> Some v
-                | `Right v-> Some v)})
+      and childrenIndex= List.map generateIndex (DocTree.getChildren node) in
+      let index= List.fold_left
+        (fun acc index->
+          { byType= StringMap.merge
+              (fun key a b->
+                  match (a, b) with
+                  | Some a, Some b-> Some (List.merge compare a b)
+                  | Some a, None-> Some a
+                  | None, Some b-> Some b
+                  | None, None-> None)
+              acc.byType index.byType;
+            byAttr= StringMap.merge
+              (fun key a b->
+                match (a, b) with
+                | Some a, Some b-> Some (List.merge compare a b)
+                | Some a, None-> Some a
+                | None, Some b-> Some b
+                | None, None-> None)
+              acc.byAttr index.byAttr
+          })
+        {byType= StringMap.empty; byAttr= StringMap.empty}
+        childrenIndex
       in
-      { byType= String.Map.add_multi index.byType ~key:name ~data:node;
-        byAttr= List.fold (String.Map.keys attrs)
-          ~init:index.byAttr
-          ~f:(fun acc attr-> String.Map.add_multi acc ~key:attr ~data:node)
+      { byType= StringMap.update name
+        (function None-> Some [node] | Some l-> Some (node::l))
+          index.byType;
+        byAttr= List.fold_left
+          (fun acc (attr,_)-> StringMap.update
+            attr
+            (function None-> Some [node] | Some l-> Some (node::l))
+            acc
+          )
+          index.byAttr
+          (StringMap.bindings attrs)
       }
 
   let find index attr value=
-    let _value= value in
-    let open Option in
-    String.Map.find index.byAttr attr
-      >>| (List.filter
-        ~f:(fun node->
+    Option.map
+      (List.filter
+        (fun node->
           Option.value
             (let attrs= DocTree.getAttrs node in
-            String.Map.find attrs attr >>| (Poly.equal _value))
+            Option.map ((==) value) (StringMap.find_opt attr attrs))
             ~default:false))
-      |> value ~default:[]
+      (StringMap.find_opt attr index.byAttr)
+      |> Option.value ~default:[]
 end
 
 

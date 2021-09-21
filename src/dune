@@ -1,7 +1,6 @@
 (library
   (name tidy)
   (public_name tidy)
-  (libraries core_kernel)
   (flags (:standard -safe-string))
   (c_names stub)
   (c_flags (-Werror -I/usr/include/tidy -I/usr/local/include/tidy))
